@@ -1,0 +1,522 @@
+@startuml amazon_complete_eer
+
+skinparam class {
+    BackgroundColor PaleGreen
+    ArrowColor SeaGreen
+    BorderColor DarkGreen
+}
+
+package "Users Schema" {
+    entity User {
+        * user_id : UUID
+        --
+        email : VARCHAR(255)
+        password_hash : VARCHAR(255)
+        password_salt : VARCHAR(255)
+        first_name : VARCHAR(100)
+        last_name : VARCHAR(100)
+        phone : VARCHAR(20)
+        is_active : BOOLEAN
+        last_login : TIMESTAMP
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+        created_by : UUID
+        updated_by : UUID
+        is_deleted : BOOLEAN
+        deleted_at : TIMESTAMP
+    }
+
+    entity ContactInfo {
+        * contact_id : UUID
+        --
+        user_id : UUID
+        contact_type : VARCHAR(50)
+        contact_value : VARCHAR(255)
+        is_primary : BOOLEAN
+        created_at : TIMESTAMP
+    }
+
+    entity SavedCarts {
+        * cart_id : UUID
+        --
+        user_id : UUID
+        cart_items : JSONB
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    entity UserRoles {
+        * role_id : UUID
+        --
+        user_id : UUID
+        role_name : VARCHAR(50)
+        created_at : TIMESTAMP
+    }
+
+    entity Addresses {
+        * address_id : UUID
+        --
+        user_id : UUID
+        address_type : VARCHAR(20)
+        address_line1 : VARCHAR(255)
+        address_line2 : VARCHAR(255)
+        city : VARCHAR(100)
+        state : VARCHAR(100)
+        postal_code : VARCHAR(20)
+        country_code : VARCHAR(2)
+        is_default : BOOLEAN
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    entity Preferences {
+        * preference_id : UUID
+        --
+        user_id : UUID
+        default_language : VARCHAR(5)
+        default_currency : VARCHAR(3)
+        notification_settings : JSONB
+        privacy_settings : JSONB
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    entity UserSecurity {
+        * security_id : UUID
+        --
+        user_id : UUID
+        two_factor_enabled : BOOLEAN
+        security_questions : JSONB
+        created_at : TIMESTAMP
+    }
+
+    entity Languages {
+        * language_code : VARCHAR(5)
+        --
+        language_name : VARCHAR(50)
+        is_default : BOOLEAN
+    }
+
+    entity SavedPayments {
+        * saved_payment_id : UUID
+        --
+        user_id : UUID
+        payment_method_id : UUID
+        nickname : VARCHAR(100)
+        is_active : BOOLEAN
+        created_at : TIMESTAMP
+    }
+}
+
+package "Orders Schema" {
+    entity orders {
+        * order_id : UUID
+        --
+        user_id : UUID
+        order_number : VARCHAR(50)
+        order_date : TIMESTAMP
+        status : VARCHAR(50)
+        currency_code : VARCHAR(3)
+        subtotal : DECIMAL(15,2)
+        shipping_cost : DECIMAL(15,2)
+        tax_amount : DECIMAL(15,2)
+        total_amount : DECIMAL(15,2)
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    entity order_items {
+        * order_item_id : UUID
+        --
+        order_id : UUID
+        product_id : UUID
+        quantity : INTEGER
+        unit_price : DECIMAL(15,2)
+        total_price : DECIMAL(15,2)
+    }
+
+    entity order_history {
+        * history_id : UUID
+        --
+        order_id : UUID
+        status : VARCHAR(50)
+        comment : TEXT
+        created_by : UUID
+        created_at : TIMESTAMP
+    }
+}
+
+package "Payments Schema" {
+    entity payment_methods {
+        * payment_method_id : UUID
+        --
+        user_id : UUID
+        type : VARCHAR(50)
+        provider : VARCHAR(50)
+        account_number : VARCHAR(20)
+        expiry_date : DATE
+        is_default : BOOLEAN
+        is_active : BOOLEAN
+    }
+
+    entity transactions {
+        * transaction_id : UUID
+        --
+        order_id : UUID
+        payment_method_id : UUID
+        amount : DECIMAL(10,2)
+        currency_code : VARCHAR(3)
+        status : VARCHAR(20)
+        provider_transaction_id : VARCHAR(100)
+        created_at : TIMESTAMP
+    }
+
+    entity installment_plans {
+        * plan_id : UUID
+        --
+        payment_method_id : UUID
+        number_of_installments : INTEGER
+        interest_rate : DECIMAL(5,2)
+        is_active : BOOLEAN
+    }
+
+    entity currencies {
+        * currency_code : VARCHAR(3)
+        --
+        currency_name : VARCHAR(100)
+        exchange_rate : DECIMAL(10,4)
+    }
+}
+
+package "Marketplace Schema" {
+    entity Seller {
+        * seller_id : UUID
+        --
+        user_id : UUID
+        business_name : VARCHAR(255)
+        tax_id : VARCHAR(100)
+        business_type : VARCHAR(50)
+        status : VARCHAR(20)
+        rating : DECIMAL(3,2)
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    User <|-- Seller
+}
+
+package "Products Schema" {
+    entity categories {
+        * category_id : UUID
+        --
+        parent_id : UUID
+        name : VARCHAR(100)
+        slug : VARCHAR(150)
+        level : INTEGER
+        path : ltree
+        is_active : BOOLEAN
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    entity brands {
+        * brand_id : UUID
+        --
+        name : VARCHAR(100)
+        slug : VARCHAR(150)
+        description : TEXT
+        logo_url : VARCHAR(255)
+        website_url : VARCHAR(255)
+        is_active : BOOLEAN
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    entity products {
+        * product_id : UUID
+        --
+        seller_id : UUID
+        category_id : UUID
+        brand_id : UUID
+        name : VARCHAR(255)
+        slug : VARCHAR(300)
+        description : TEXT
+        is_active : BOOLEAN
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+        specifications : JSONB
+    }
+
+    entity product_specifications {
+        * specification_id : UUID
+        --
+        product_id : UUID
+        key : VARCHAR(100)
+        value : VARCHAR(255)
+        created_at : TIMESTAMP
+    }
+
+    entity product_images {
+        * image_id : UUID
+        --
+        product_id : UUID
+        url : VARCHAR(255)
+        alt_text : VARCHAR(255)
+        sort_order : INTEGER
+        is_primary : BOOLEAN
+        created_at : TIMESTAMP
+    }
+
+    entity product_variants {
+        * variant_id : UUID
+        --
+        product_id : UUID
+        sku : VARCHAR(100)
+        name : VARCHAR(100)
+        attributes : JSONB
+        is_active : BOOLEAN
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    entity warehouses {
+        * warehouse_id : UUID
+        --
+        name : VARCHAR(100)
+        code : VARCHAR(20)
+        address_line1 : VARCHAR(255)
+        address_line2 : VARCHAR(255)
+        city : VARCHAR(100)
+        state : VARCHAR(100)
+        postal_code : VARCHAR(20)
+        country_code : VARCHAR(2)
+        is_active : BOOLEAN
+        created_at : TIMESTAMP
+    }
+
+    entity inventory {
+        * inventory_id : UUID
+        --
+        product_id : UUID
+        variant_id : UUID
+        warehouse_id : UUID
+        quantity : INTEGER
+        reserved_quantity : INTEGER
+        reorder_point : INTEGER
+        updated_at : TIMESTAMP
+    }
+
+    entity reviews {
+        * review_id : UUID
+        --
+        product_id : UUID
+        user_id : UUID
+        rating : INTEGER
+        comment : TEXT
+        created_at : TIMESTAMP
+    }
+
+    entity inventory_alerts {
+        * alert_id : UUID
+        --
+        product_id : UUID
+        variant_id : UUID
+        warehouse_id : UUID
+        alert_type : VARCHAR(50)
+        alert_details : JSONB
+        created_at : TIMESTAMP
+    }
+}
+
+package "Shipping Schema" {
+    entity carriers {
+        * carrier_id : UUID
+        --
+        name : VARCHAR(100)
+        code : VARCHAR(20)
+        tracking_url_template : VARCHAR(255)
+        is_active : BOOLEAN
+        created_at : TIMESTAMP
+    }
+
+    entity shipping_methods {
+        * method_id : UUID
+        --
+        carrier_id : UUID
+        name : VARCHAR(100)
+        code : VARCHAR(20)
+        estimated_days_min : INTEGER
+        estimated_days_max : INTEGER
+        is_prime_eligible : BOOLEAN
+        is_international : BOOLEAN
+        is_active : BOOLEAN
+        created_at : TIMESTAMP
+    }
+
+    entity shipping_tracking {
+        * tracking_id : UUID
+        --
+        order_id : UUID
+        carrier_id : UUID
+        tracking_number : VARCHAR(100)
+        status : VARCHAR(50)
+        estimated_delivery : TIMESTAMP
+        created_at : TIMESTAMP
+    }
+}
+
+package "Prime Schema" {
+    entity memberships {
+        * membership_id : UUID
+        --
+        user_id : UUID
+        plan_type : VARCHAR(50)
+        status : VARCHAR(20)
+        start_date : TIMESTAMP
+        end_date : TIMESTAMP
+        auto_renewal : BOOLEAN
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    entity benefit_eligibility {
+        * eligibility_id : UUID
+        --
+        country_code : VARCHAR(2)
+        is_video_included : BOOLEAN
+        is_shipping_included : BOOLEAN
+        is_music_included : BOOLEAN
+    }
+}
+
+package "Video Schema" {
+    entity content {
+        * content_id : UUID
+        --
+        title : VARCHAR(255)
+        description : TEXT
+        type : VARCHAR(50)
+        release_year : INTEGER
+        rating : VARCHAR(10)
+        duration_minutes : INTEGER
+        is_prime_exclusive : BOOLEAN
+        created_at : TIMESTAMP
+    }
+
+    entity episodes {
+        * episode_id : UUID
+        --
+        content_id : UUID
+        season_number : INTEGER
+        episode_number : INTEGER
+        title : VARCHAR(255)
+        description : TEXT
+        duration_minutes : INTEGER
+        created_at : TIMESTAMP
+    }
+
+    entity watch_history {
+        * history_id : UUID
+        --
+        user_id : UUID
+        content_id : UUID
+        episode_id : UUID
+        watched_duration : INTEGER
+        watched_at : TIMESTAMP
+    }
+}
+
+package "Promotions Schema" {
+    entity campaigns {
+        * campaign_id : UUID
+        --
+        name : VARCHAR(255)
+        description : TEXT
+        start_date : TIMESTAMP
+        end_date : TIMESTAMP
+        discount_type : VARCHAR(20)
+        discount_value : DECIMAL(10,2)
+        minimum_purchase : DECIMAL(10,2)
+        created_at : TIMESTAMP
+        updated_at : TIMESTAMP
+    }
+
+    entity campaign_products {
+        * campaign_product_id : UUID
+        --
+        campaign_id : UUID
+        product_id : UUID
+    }
+
+    entity promotion_rules {
+        * rule_id : UUID
+        --
+        campaign_id : UUID
+        rule_type : VARCHAR(50)
+        rule_details : JSONB
+        created_at : TIMESTAMP
+    }
+}
+
+package "Analytics Schema" {
+    entity user_recommendations {
+        * recommendation_id : UUID
+        --
+        user_id : UUID
+        recommended_products : JSONB
+        created_at : TIMESTAMP
+    }
+
+    entity search_indexes {
+        * index_id : UUID
+        --
+        table_name : VARCHAR(100)
+        index_details : JSONB
+        created_at : TIMESTAMP
+    }
+}
+
+' Relationships
+User ||--o{ ContactInfo : "has"
+User ||--o{ SavedCarts : "has"
+User ||--o{ UserRoles : "has"
+User ||--o{ Addresses : "has"
+User ||--o{ Preferences : "has"
+User ||--o{ UserSecurity : "has"
+User ||--o{ SavedPayments : "has"
+User ||--o{ orders : "places"
+User ||--o{ reviews : "writes"
+User ||--o{ memberships : "subscribes"
+User ||--o{ watch_history : "watches"
+
+orders ||--o{ order_items : "contains"
+orders ||--o{ order_history : "has"
+orders ||--o{ transactions : "paid by"
+orders ||--o{ shipping_tracking : "tracked by"
+
+payment_methods ||--o{ transactions : "used in"
+payment_methods ||--o{ installment_plans : "has"
+payment_methods ||--o{ SavedPayments : "saved as"
+
+Seller ||--o{ products : "sells"
+
+products ||--o{ product_specifications : "has"
+products ||--o{ product_images : "has"
+products ||--o{ product_variants : "has"
+products ||--o{ inventory : "stored in"
+products ||--o{ reviews : "reviewed by"
+products ||--o{ campaign_products : "promoted in"
+
+categories ||--o{ products : "categorizes"
+brands ||--o{ products : "brands"
+
+carriers ||--o{ shipping_methods : "offers"
+carriers ||--o{ shipping_tracking : "tracks"
+
+content ||--o{ episodes : "contains"
+content ||--o{ watch_history : "watched in"
+
+campaigns ||--o{ campaign_products : "includes"
+campaigns ||--o{ promotion_rules : "governed by"
+
+@enduml
