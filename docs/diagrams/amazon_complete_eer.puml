@@ -1,0 +1,159 @@
+@startuml Amazon Complete EER Diagram
+
+' Styling
+!theme plain
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam backgroundColor white
+skinparam roundcorner 10
+
+' Color definitions
+!define USERS_COLOR #2196F3
+!define PRODUCTS_COLOR #4CAF50
+!define ORDERS_COLOR #FF9800
+!define PRIME_COLOR #9C27B0
+!define VIDEO_COLOR #F44336
+!define PAYMENTS_COLOR #03A9F4
+!define ANALYTICS_COLOR #607D8B
+
+' Users Domain
+package "Users Domain" {
+    entity "users.users" as users {
+        * user_id: UUID <<PK>>
+        --
+        * email: VARCHAR(255)
+        * password_hash: VARCHAR(255)
+        first_name: VARCHAR(100)
+        last_name: VARCHAR(100)
+        phone: VARCHAR(20)
+        default_language: VARCHAR(5)
+        default_currency: VARCHAR(3)
+        is_active: BOOLEAN
+        created_at: TIMESTAMP
+        updated_at: TIMESTAMP
+    }
+
+    entity "users.addresses" as addresses {
+        * address_id: UUID <<PK>>
+        --
+        * user_id: UUID <<FK>>
+        * address_type: VARCHAR(20)
+        * address_line1: VARCHAR(255)
+        city: VARCHAR(100)
+        country_code: VARCHAR(2)
+        is_default: BOOLEAN
+    }
+
+    entity "users.preferences" as preferences {
+        * preference_id: UUID <<PK>>
+        --
+        * user_id: UUID <<FK>>
+        notification_settings: JSONB
+        privacy_settings: JSONB
+    }
+}
+
+' Products Domain
+package "Products Domain" {
+    entity "products.products" as products {
+        * product_id: UUID <<PK>>
+        --
+        * seller_id: UUID <<FK>>
+        * category_id: UUID <<FK>>
+        * sku: VARCHAR(50)
+        * name: VARCHAR(255)
+        description: TEXT
+        specifications: JSONB
+        is_prime_eligible: BOOLEAN
+    }
+
+    entity "products.categories" as categories {
+        * category_id: UUID <<PK>>
+        --
+        parent_id: UUID <<FK>>
+        * name: VARCHAR(100)
+        * level: INTEGER
+        * path: ltree
+    }
+
+    entity "products.inventory" as inventory {
+        * inventory_id: UUID <<PK>>
+        --
+        * product_id: UUID <<FK>>
+        * warehouse_id: UUID <<FK>>
+        * quantity: INTEGER
+        reserved_quantity: INTEGER
+    }
+}
+
+' Orders Domain
+package "Orders Domain" {
+    entity "orders.orders" as orders {
+        * order_id: UUID <<PK>>
+        --
+        * user_id: UUID <<FK>>
+        * status: VARCHAR(50)
+        * total_amount: DECIMAL(15,2)
+        shipping_address_id: UUID <<FK>>
+        is_prime_delivery: BOOLEAN
+    }
+
+    entity "orders.order_items" as order_items {
+        * order_item_id: UUID <<PK>>
+        --
+        * order_id: UUID <<FK>>
+        * product_id: UUID <<FK>>
+        * quantity: INTEGER
+        * unit_price: DECIMAL(15,2)
+    }
+}
+
+' Prime Domain
+package "Prime Domain" {
+    entity "prime.memberships" as prime_memberships {
+        * membership_id: UUID <<PK>>
+        --
+        * user_id: UUID <<FK>>
+        * plan_type: VARCHAR(20)
+        * status: VARCHAR(20)
+        start_date: TIMESTAMP
+        end_date: TIMESTAMP
+    }
+}
+
+' Video Domain
+package "Video Domain" {
+    entity "video.content" as video_content {
+        * content_id: UUID <<PK>>
+        --
+        * title: VARCHAR(255)
+        duration: INTEGER
+        is_prime_exclusive: BOOLEAN
+    }
+
+    entity "video.episodes" as video_episodes {
+        * episode_id: UUID <<PK>>
+        --
+        * content_id: UUID <<FK>>
+        * season_number: INTEGER
+        * episode_number: INTEGER
+    }
+}
+
+' Relationships
+users ||--o{ addresses : has
+users ||--o| preferences : has
+users ||--o{ orders : places
+users ||--o| prime_memberships : subscribes
+
+products ||--o{ inventory : tracks
+products }o--|| categories : belongs_to
+products ||--o{ order_items : contains
+
+orders ||--o{ order_items : includes
+orders }o--|| addresses : ships_to
+
+prime_memberships ||--o{ video_content : access
+video_content ||--o{ video_episodes : contains
+
+@enduml
