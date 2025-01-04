@@ -1366,10 +1366,6 @@ This will:
 
 After setting up the database, you can connect to it using your preferred SQL client and start querying or modifying the data as needed.
 
-## License
-
-This project is licensed under the MIT License.
-
 ## Setting Up Amazon Diagram on macOS
 
 To set up and view the `amazon_diagram.puml` on a macOS machine, follow these steps:
@@ -1410,12 +1406,3 @@ To set up and view the `amazon_diagram.puml` on a macOS machine, follow these st
 3. **View the Diagram:**
    - Open the generated PNG or PDF file using the Preview app or any other image/PDF viewer on macOS.
 
-### Additional Tips
-
-- **Ensure PATH is Set Correctly:**
-  - If you encounter issues with Graphviz, ensure that the `dot` executable is in your system's PATH. You can check this by running `dot -V` in the terminal.
-
-- **Troubleshooting:**
-  - If you face any issues, ensure that all software is up to date and that you have the necessary permissions to execute files in the directory.
-
-By following these steps, you should be able to set up and view the `amazon_diagram.puml` on a macOS machine successfully.
