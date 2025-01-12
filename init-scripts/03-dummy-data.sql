@@ -6,131 +6,65 @@ INSERT INTO users.users (email, password_hash, password_salt, first_name, last_n
 ('jane.smith@email.com', 'hash2', 'salt2', 'Jane', 'Smith', '+905557654321'),
 ('ali.yilmaz@email.com', 'hash3', 'salt3', 'Ali', 'Yılmaz', '+905559876543');
 
--- Insert payment methods
-INSERT INTO payments.payment_methods (type, provider, account_number, expiry_date, is_default, is_active)
-VALUES ('credit_card', 'Visa', '4111111111111111', '2025-12-31', TRUE, TRUE);
-
--- Insert saved payments
-INSERT INTO users.saved_payments (user_id, payment_method_id, nickname, is_active)
-SELECT u.user_id, pm.payment_method_id, 'My Visa', TRUE FROM users.users u
-JOIN payments.payment_methods pm ON u.user_id = pm.user_id;
-
--- Insert contact info
-INSERT INTO users.contact_info (user_id, contact_type, contact_value, is_primary)
-SELECT user_id, 'email', email, TRUE FROM users.users;
-
--- Insert saved carts
-INSERT INTO users.cart (user_id, cart_items)
-SELECT user_id, '[{"product_id": "some-product-id", "quantity": 2}]'::jsonb FROM users.users;
-
--- Insert user roles
-INSERT INTO users.user_roles (user_id, role_name)
-SELECT user_id, 'customer' FROM users.users;
-
 -- Insert addresses
-INSERT INTO users.addresses (user_id, address_type, address_line1, city, postal_code, country_code, is_default)
-SELECT user_id, 'shipping', 'Test Address 123', 'Istanbul', '34000', 'TR', TRUE FROM users.users;
+INSERT INTO products.addresses (address_line1, address_line2, city, state, postal_code, country_code) VALUES
+('123 Main St', 'Apt 1', 'Istanbul', 'Istanbul', '34000', 'TR'),
+('456 Elm St', NULL, 'Ankara', 'Ankara', '06000', 'TR');
 
--- Insert user preferences
-INSERT INTO users.preferences (user_id, language_code, currency_code, notification_settings, privacy_settings)
-SELECT user_id, 'en_US', 'USD', '{"email": true}'::jsonb, '{"share_data": false}'::jsonb FROM users.users;
+-- Insert warehouses
+INSERT INTO products.warehouses (name, code, address_id, is_active) VALUES
+('Main Warehouse', 'WH001', (SELECT address_id FROM products.addresses LIMIT 1), TRUE),
+('Secondary Warehouse', 'WH002', (SELECT address_id FROM products.addresses OFFSET 1 LIMIT 1), TRUE);
 
--- Insert user security settings
-INSERT INTO users.user_security (user_id, two_factor_enabled, security_questions)
-SELECT user_id, FALSE, '{"question": "What is your pets name?", "answer": "Fluffy"}'::jsonb FROM users.users;
-
--- Insert languages
-INSERT INTO users.languages (language_code, language_name, is_default) VALUES
-('en_US', 'English (United States)', TRUE),
-('tr_TR', 'Turkish (Turkey)', FALSE);
+-- Insert sellers
+INSERT INTO marketplace.sellers (user_id, business_name, tax_id, business_type, status) VALUES
+((SELECT user_id FROM users.users LIMIT 1), 'Doe Enterprises', 'TAX123', 'retail', 'active'),
+((SELECT user_id FROM users.users OFFSET 1 LIMIT 1), 'Smith Ventures', 'TAX456', 'wholesale', 'active');
 
 -- Insert categories
 INSERT INTO products.categories (name, slug, level, path) VALUES
 ('Electronics', 'electronics', 1, 'electronics'::ltree),
-('Books', 'books', 1, 'books'::ltree),
-('Fashion', 'fashion', 1, 'fashion'::ltree);
+('Home Appliances', 'home-appliances', 1, 'home-appliances'::ltree);
 
 -- Insert brands
 INSERT INTO products.brands (name, slug, description) VALUES
 ('Samsung', 'samsung', 'Electronics manufacturer'),
-('Apple', 'apple', 'Technology company'),
-('Nike', 'nike', 'Sports equipment manufacturer');
-
--- Insert sellers
-INSERT INTO marketplace.sellers (user_id, business_name, tax_id, business_type, status)
-SELECT user_id, 'Test Store ' || first_name, 'TAX' || generate_series(1,3), 'retail', 'active' FROM users.users LIMIT 3;
+('LG', 'lg', 'Home appliances and electronics');
 
 -- Insert products
-INSERT INTO products.products (seller_id, category_id, brand_id, name, slug, description)
-SELECT
-    s.seller_id,
-    c.category_id,
-    b.brand_id,
-    'Test Product ' || generate_series(1,5),
-    'test-product-' || generate_series(1,5),
-    'Description for product ' || generate_series(1,5)
-FROM marketplace.sellers s
-CROSS JOIN products.brands b
-CROSS JOIN products.categories c
-LIMIT 5;
-
--- Insert product specifications
-INSERT INTO products.product_specifications (product_id, key, value)
-SELECT p.product_id, 'Color', 'Red' FROM products.products p;
-
--- Insert product images
-INSERT INTO products.product_images (product_id, url, alt_text, sort_order, is_primary)
-SELECT p.product_id, 'http://example.com/image.jpg', 'Product Image', 1, TRUE FROM products.products p;
+INSERT INTO products.products (seller_id, category_id, brand_id, name, slug, description, price, is_active, created_at, updated_at) VALUES
+((SELECT seller_id FROM marketplace.sellers LIMIT 1), (SELECT category_id FROM products.categories LIMIT 1), (SELECT brand_id FROM products.brands LIMIT 1), 'Smartphone', 'smartphone', 'Latest model smartphone', 999.99, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+((SELECT seller_id FROM marketplace.sellers OFFSET 1 LIMIT 1), (SELECT category_id FROM products.categories OFFSET 1 LIMIT 1), (SELECT brand_id FROM products.brands OFFSET 1 LIMIT 1), 'Washing Machine', 'washing-machine', 'High efficiency washing machine', 599.99, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert product variants
-INSERT INTO products.product_variants (product_id, sku, name, attributes)
-SELECT p.product_id, 'SKU-' || generate_series(1,5), 'Variant for product ' || generate_series(1,5), '{"color": "red", "size": "M"}'::jsonb FROM products.products p LIMIT 5;
-
--- Insert warehouses
-INSERT INTO products.warehouses (name, code, is_active)
-VALUES ('Main Warehouse', 'WH001', TRUE);
-
--- Insert addresses for warehouses
-INSERT INTO products.addresses (address_line1, city, postal_code, country_code)
-VALUES ('Warehouse Address', 'Istanbul', '34000', 'TR');
+INSERT INTO products.product_variants (product_id, sku, name, attributes) VALUES
+((SELECT product_id FROM products.products LIMIT 1), 'SKU123', 'Smartphone Variant', '{"color": "black", "size": "64GB"}'::jsonb),
+((SELECT product_id FROM products.products OFFSET 1 LIMIT 1), 'SKU456', 'Washing Machine Variant', '{"color": "white", "capacity": "7kg"}'::jsonb);
 
 -- Insert inventory
-INSERT INTO products.inventory (product_id, variant_id, quantity, reserved_quantity, reorder_point)
-SELECT p.product_id, v.variant_id, 100, 10, 20
-FROM products.products p
-CROSS JOIN products.product_variants v
-LIMIT 1;
+INSERT INTO products.inventory (product_id, variant_id, quantity, reserved_quantity, reorder_point) VALUES
+((SELECT product_id FROM products.products LIMIT 1), (SELECT variant_id FROM products.product_variants LIMIT 1), 100, 10, 20),
+((SELECT product_id FROM products.products OFFSET 1 LIMIT 1), (SELECT variant_id FROM products.product_variants OFFSET 1 LIMIT 1), 50, 5, 10);
 
 -- Insert inventory-warehouse relationships
-INSERT INTO products.inventory_warehouse (inventory_id, warehouse_id)
-SELECT i.inventory_id, w.warehouse_id
-FROM products.inventory i
-CROSS JOIN products.warehouses w
-LIMIT 1;
-
--- Insert product reviews
-INSERT INTO products.reviews (product_id, user_id, rating, comment)
-SELECT p.product_id, u.user_id, 5, 'Great product!' FROM products.products p CROSS JOIN users.users u LIMIT 3;
+INSERT INTO products.inventory_warehouse (inventory_id, warehouse_id) VALUES
+((SELECT inventory_id FROM products.inventory LIMIT 1), (SELECT warehouse_id FROM products.warehouses LIMIT 1)),
+((SELECT inventory_id FROM products.inventory OFFSET 1 LIMIT 1), (SELECT warehouse_id FROM products.warehouses OFFSET 1 LIMIT 1));
 
 -- Insert orders
-INSERT INTO orders.orders (user_id, order_number, status, currency_code, subtotal, shipping_cost, tax_amount, total_amount)
-SELECT u.user_id, 'ORD-' || generate_series(1,3), 'processing', 'TRY', 100.00, 10.00, 18.00, 128.00 FROM users.users u LIMIT 3;
+INSERT INTO orders.orders (user_id, order_number, status, currency_code, subtotal, shipping_cost, tax_amount, total_amount) VALUES
+((SELECT user_id FROM users.users LIMIT 1), 'ORD001', 'Pending', 'TRY', 100.00, 10.00, 18.00, 128.00),
+((SELECT user_id FROM users.users OFFSET 1 LIMIT 1), 'ORD002', 'Completed', 'USD', 200.00, 20.00, 36.00, 256.00);
 
--- Insert order items
-INSERT INTO orders.order_items (order_id, product_id, quantity, unit_price, total_price)
-SELECT o.order_id, p.product_id, 1, 100.00, 100.00 FROM orders.orders o CROSS JOIN products.products p LIMIT 3;
-
--- Insert order history
-INSERT INTO orders.order_history (order_id, status, comment, created_by)
-SELECT o.order_id, 'shipped', 'Order shipped', u.user_id FROM orders.orders o CROSS JOIN users.users u LIMIT 3;
-
--- Insert installment plans
-INSERT INTO payments.installment_plans (payment_method_id, number_of_installments, interest_rate, is_active)
-SELECT pm.payment_method_id, 12, 1.5, TRUE FROM payments.payment_methods pm;
+-- Insert payment methods
+INSERT INTO payments.payment_methods (type, provider, account_number, expiry_date, is_default, is_active) VALUES
+('credit_card', 'Visa', '4111111111111111', '2025-12-31', TRUE, TRUE),
+('paypal', 'PayPal', 'user@example.com', NULL, FALSE, TRUE);
 
 -- Insert transactions
-INSERT INTO payments.transactions (order_id, payment_method_id, amount, currency_code, status, provider_transaction_id)
-SELECT o.order_id, pm.payment_method_id, 128.00, 'TRY', 'completed', 'TXN12345' FROM orders.orders o CROSS JOIN payments.payment_methods pm LIMIT 3;
+INSERT INTO payments.transactions (order_id, payment_method_id, amount, currency_code, status, provider_transaction_id) VALUES
+((SELECT order_id FROM orders.orders LIMIT 1), (SELECT payment_method_id FROM payments.payment_methods LIMIT 1), 128.00, 'TRY', 'completed', 'TXN12345'),
+((SELECT order_id FROM orders.orders OFFSET 1 LIMIT 1), (SELECT payment_method_id FROM payments.payment_methods OFFSET 1 LIMIT 1), 256.00, 'USD', 'completed', 'TXN67890');
 
 -- Insert currencies
 INSERT INTO payments.currencies (currency_code, currency_name, exchange_rate) VALUES
@@ -138,63 +72,59 @@ INSERT INTO payments.currencies (currency_code, currency_name, exchange_rate) VA
 ('TRY', 'Turkish Lira', 0.11);
 
 -- Insert carriers
-INSERT INTO shipping.carriers (name, code, tracking_url_template)
-VALUES ('DHL', 'DHL', 'http://dhl.com/track?num={TRACKING_NUMBER}');
+INSERT INTO shipping.carriers (name, code, tracking_url_template) VALUES
+('DHL', 'DHL', 'http://dhl.com/track?num={TRACKING_NUMBER}'),
+('FedEx', 'FDX', 'http://fedex.com/track?num={TRACKING_NUMBER}');
 
 -- Insert shipping methods
-INSERT INTO shipping.shipping_methods (carrier_id, name, code, estimated_days_min, estimated_days_max, is_prime_eligible, is_international)
-SELECT c.carrier_id, 'Standard Shipping', 'STD', 3, 5, FALSE, TRUE FROM shipping.carriers c;
-
--- Insert shipping tracking
-INSERT INTO shipping.shipping_tracking (order_id, carrier_id, tracking_number, status, estimated_delivery)
-SELECT o.order_id, c.carrier_id, 'TRACK123', 'in transit', CURRENT_TIMESTAMP + interval '5 days'
-FROM orders.orders o
-CROSS JOIN shipping.carriers c
-LIMIT 1;
+INSERT INTO shipping.shipping_methods (carrier_id, name, code, estimated_days_min, estimated_days_max, is_prime_eligible, is_international) VALUES
+((SELECT carrier_id FROM shipping.carriers LIMIT 1), 'Standard Shipping', 'STD', 3, 5, FALSE, TRUE),
+((SELECT carrier_id FROM shipping.carriers OFFSET 1 LIMIT 1), 'Express Shipping', 'EXP', 1, 2, TRUE, TRUE);
 
 -- Insert prime memberships
-INSERT INTO prime.memberships (user_id, plan_type, status, start_date, end_date, auto_renewal)
-SELECT user_id, 'annual', 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '1 year', TRUE FROM users.users;
+INSERT INTO prime.memberships (user_id, plan_type, status, start_date, end_date, auto_renewal) VALUES
+((SELECT user_id FROM users.users LIMIT 1), 'annual', 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '1 year', TRUE),
+((SELECT user_id FROM users.users OFFSET 1 LIMIT 1), 'monthly', 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '1 month', TRUE);
 
 -- Insert video content
-INSERT INTO video.content (title, description, type, release_year, rating, duration_minutes, is_prime_exclusive)
-VALUES ('Sample Movie', 'A great movie', 'movie', 2023, 'PG', 120, TRUE);
-
--- Insert series
-INSERT INTO video.series (content_id, season_number, episode_number, title, description, duration_minutes)
-SELECT c.content_id, 1, 1, 'Episode 1', 'First episode', 45 FROM video.content c WHERE c.type = 'series';
-
--- Insert film
-INSERT INTO video.film (content_id, duration_minutes)
-SELECT c.content_id, 120 FROM video.content c WHERE c.type = 'movie';
-
--- Insert watch history for a movie
-INSERT INTO video.watch_history (user_id, content_id, watched_duration)
-SELECT u.user_id, c.content_id, 45
-FROM users.users u
-CROSS JOIN video.content c
-WHERE c.type = 'movie'
-LIMIT 1;
-
--- Insert watch history for an episode
-INSERT INTO video.watch_history (user_id, episode_id, watched_duration)
-SELECT u.user_id, e.series_id, 45
-FROM users.users u
-CROSS JOIN video.series e
-LIMIT 1;
+INSERT INTO video.content (title, description, type, release_year, rating, duration_minutes, is_prime_exclusive) VALUES
+('Sample Movie', 'A great movie', 'movie', 2023, 'PG', 120, TRUE),
+('Sample Series', 'An exciting series', 'series', 2023, 'PG-13', 45, FALSE);
 
 -- Insert promotions campaigns
-INSERT INTO promotions.campaigns (name, description, start_date, end_date, discount_type, discount_value, minimum_purchase)
-VALUES ('Summer Sale', 'Discounts on summer products', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '1 month', 'percentage', 10.00, 50.00);
+INSERT INTO promotions.campaigns (name, description, start_date, end_date, discount_type, discount_value, minimum_purchase) VALUES
+('Summer Sale', 'Discounts on summer products', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '1 month', 'percentage', 10.00, 50.00),
+('Winter Sale', 'Discounts on winter products', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '2 months', 'fixed_amount', 20.00, 100.00);
 
--- Insert campaign products
-INSERT INTO promotions.campaign_products (campaign_id, product_id)
-SELECT c.campaign_id, p.product_id FROM promotions.campaigns c CROSS JOIN products.products p LIMIT 1;
+-- Insert supermarket
+INSERT INTO supermarket (name, phone, address, tracking_number, is_active) VALUES
+('Supermarket A', '+905551234567', '123 Market St', 'TRACK123', TRUE),
+('Supermarket B', '+905557654321', '456 Market St', 'TRACK456', TRUE);
 
--- Insert promotion rules
-INSERT INTO promotions.promotion_rules (campaign_id, rule_type, rule_details)
-SELECT c.campaign_id, 'discount', '{"percentage": 10}'::jsonb FROM promotions.campaigns c LIMIT 1;
+-- Insert restaurant
+INSERT INTO restaurant (name, address, phone, is_active) VALUES
+('Restaurant A', '456 Food St', '+905557654321', TRUE),
+('Restaurant B', '789 Food St', '+905559876543', TRUE);
 
--- Insert benefit eligibility for Prime
-INSERT INTO prime.benefit_eligibility (content_id, country_code, is_video_included)
-SELECT c.content_id, 'TR', TRUE FROM video.content c LIMIT 1;
+-- Insert procurement
+INSERT INTO procurement (transaction_id, order_date, supplier_name, total_amount, supermarket_id) VALUES
+((SELECT transaction_id FROM payments.transactions LIMIT 1), CURRENT_TIMESTAMP, 'Supplier A', 500.00, (SELECT supermarket_id FROM supermarket LIMIT 1)),
+((SELECT transaction_id FROM payments.transactions OFFSET 1 LIMIT 1), CURRENT_TIMESTAMP, 'Supplier B', 1000.00, (SELECT supermarket_id FROM supermarket OFFSET 1 LIMIT 1));
+
+-- Insert order items
+INSERT INTO orders.order_items (order_id, product_id, quantity, unit_price, total_price) VALUES
+((SELECT order_id FROM orders.orders LIMIT 1), (SELECT product_id FROM products.products LIMIT 1), 2, 999.99, 1999.98),
+((SELECT order_id FROM orders.orders OFFSET 1 LIMIT 1), (SELECT product_id FROM products.products OFFSET 1 LIMIT 1), 1, 599.99, 599.99);
+
+INSERT INTO promotions.campaigns (name, description, start_date, end_date, discount_type, discount_value, minimum_purchase) VALUES
+('Summer Sale', 'Discounts on summer products', CURRENT_DATE - interval '1 month', CURRENT_DATE + interval '1 month', 'percentage', 10.00, 50.00),
+('Winter Sale', 'Discounts on winter products', CURRENT_DATE - interval '2 months', CURRENT_DATE + interval '2 months', 'fixed_amount', 20.00, 100.00);
+
+INSERT INTO products.inventory (product_id, variant_id, quantity, reserved_quantity, reorder_point) VALUES
+((SELECT product_id FROM products.products LIMIT 1), (SELECT variant_id FROM products.product_variants LIMIT 1), 5, 1, 10),
+((SELECT product_id FROM products.products OFFSET 1 LIMIT 1), (SELECT variant_id FROM products.product_variants OFFSET 1 LIMIT 1), 8, 2, 10);
+
+-- Insert product reviews
+INSERT INTO products.reviews (product_id, user_id, rating, comment, created_at) VALUES
+((SELECT product_id FROM products.products LIMIT 1), (SELECT user_id FROM users.users LIMIT 1), 4, 'Great product!', CURRENT_TIMESTAMP),
+((SELECT product_id FROM products.products OFFSET 1 LIMIT 1), (SELECT user_id FROM users.users OFFSET 1 LIMIT 1), 4, 'Very useful!', CURRENT_TIMESTAMP);

@@ -93,6 +93,7 @@ CREATE TABLE products.products (
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(300) UNIQUE NOT NULL,
     description TEXT,
+    price DECIMAL(15,2),
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -494,3 +495,58 @@ CREATE INDEX idx_reviews_product_user ON products.reviews(product_id, user_id);
 CREATE INDEX idx_promotion_rules_campaign ON promotions.promotion_rules(campaign_id);
 CREATE INDEX idx_shipping_tracking_order ON shipping.shipping_tracking(order_id);
 CREATE INDEX idx_user_security_user ON users.user_security(user_id);
+
+CREATE OR REPLACE FUNCTION update_stock_after_order()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE products.inventory
+    SET quantity = quantity - NEW.quantity
+    WHERE product_id = NEW.product_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_stock_after_order_trigger
+AFTER INSERT ON orders.order_items
+FOR EACH ROW EXECUTE FUNCTION update_stock_after_order();
+
+CREATE OR REPLACE FUNCTION update_sales_revenue()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.status = 'Completed' THEN
+        UPDATE analytics.sales_stats
+        SET total_revenue = total_revenue + NEW.total_amount,
+            total_sales = total_sales + 1
+        WHERE date = CURRENT_DATE;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_sales_revenue_trigger
+AFTER UPDATE ON orders.orders
+FOR EACH ROW EXECUTE FUNCTION update_sales_revenue();
+
+CREATE OR REPLACE FUNCTION notify_low_stock()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.quantity < 10 THEN
+        INSERT INTO notifications (message, created_at)
+        VALUES (CONCAT('Product ', NEW.product_id, ' has reached a critical stock level.'), CURRENT_TIMESTAMP);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_low_stock_trigger
+AFTER UPDATE ON products.inventory
+FOR EACH ROW EXECUTE FUNCTION notify_low_stock();
+
+ALTER TABLE products.products
+ADD CONSTRAINT chk_positive_price CHECK (price >= 0);
+
+ALTER TABLE products.inventory
+ADD CONSTRAINT chk_stock_quantity CHECK (quantity >= 0);
+
+ALTER TABLE orders.orders
+ADD CONSTRAINT chk_order_status CHECK (status IN ('Pending', 'Completed', 'Cancelled'));
