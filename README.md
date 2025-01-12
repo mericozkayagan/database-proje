@@ -62,14 +62,7 @@ This project implements a database system to analyze data from major Turkish e-c
 
 ### 2.1 Development Environment
 
-- Docker Desktop
-  - Windows: WSL 2 enabled
-  - macOS: Apple Silicon or Intel version
-  - Linux: Docker Engine
-- VS Code with extensions:
-  - Docker
-  - PlantUML
-  - PostgreSQL
+- Docker
 - Git for version control
 
 ## 3. Data Requirements
@@ -91,6 +84,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Users Schema
 
 #### 1. Users Table (`users.users`)
+
 - **Purpose:** This table stores the core information for each user registered on the platform.
 - **Key Features:**
   - Each user is uniquely identified by a `user_id`.
@@ -102,6 +96,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Soft deletion is supported with the `is_deleted` and `deleted_at` fields, allowing accounts to be marked as deleted without permanent removal.
 
 #### 2. Contact Information Table (`users.contact_info`)
+
 - **Purpose:** This table manages additional contact methods for users, such as alternative emails or phone numbers.
 - **Key Features:**
   - Each contact entry is uniquely identified by a `contact_id`.
@@ -110,7 +105,8 @@ This project implements a database system to analyze data from major Turkish e-c
   - `contact_value` holds the actual contact information.
   - The `is_primary` field indicates if this is the user's primary contact method.
 
-#### 3. Saved Carts Table (`users.saved_carts`)
+#### 3. Saved Carts Table (`users.cart`)
+
 - **Purpose:** This table allows users to save their shopping carts for future purchases.
 - **Key Features:**
   - Each saved cart is uniquely identified by a `cart_id`.
@@ -119,6 +115,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps `created_at` and `updated_at` track when the cart was created and last modified.
 
 #### 4. User Roles Table (`users.user_roles`)
+
 - **Purpose:** This table assigns roles to users, defining their permissions and access levels within the platform.
 - **Key Features:**
   - Each role assignment is uniquely identified by a `role_id`.
@@ -127,6 +124,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `created_at` timestamp records when the role was assigned.
 
 #### 5. Addresses Table (`users.addresses`)
+
 - **Purpose:** This table stores multiple addresses for users, such as billing and shipping addresses.
 - **Key Features:**
   - Each address is uniquely identified by an `address_id`.
@@ -136,6 +134,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_default` field indicates if this is the user's default address for transactions.
 
 #### 6. Preferences Table (`users.preferences`)
+
 - **Purpose:** This table stores user preferences for language, currency, and notification settings.
 - **Key Features:**
   - Each preference set is uniquely identified by a `preference_id`.
@@ -144,6 +143,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `notification_settings` and `privacy_settings` are JSON objects that store user-specific settings for notifications and privacy.
 
 #### 7. User Security Table (`users.user_security`)
+
 - **Purpose:** This table manages security settings for users, including two-factor authentication and security questions.
 - **Key Features:**
   - Each security setting is uniquely identified by a `security_id`.
@@ -152,6 +152,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `security_questions` is a JSON array storing security questions and answers for account recovery.
 
 #### 8. Languages Table (`users.languages`)
+
 - **Purpose:** This table defines the languages supported by the platform.
 - **Key Features:**
   - Each language is uniquely identified by a `language_code`.
@@ -159,6 +160,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_default` field indicates if this language is the default for the platform.
 
 #### 9. Saved Payments Table (`users.saved_payments`)
+
 - **Purpose:** This table allows users to save their preferred payment methods for quick access during checkout.
 - **Key Features:**
   - Each saved payment method is uniquely identified by a `saved_payment_id`.
@@ -170,6 +172,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Products Schema
 
 #### 1. Categories Table (`products.categories`)
+
 - **Purpose:** Organizes products into hierarchical categories for easier navigation and filtering.
 - **Key Features:**
   - Each category is uniquely identified by a `category_id`.
@@ -179,6 +182,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the category is visible to users.
 
 #### 2. Brands Table (`products.brands`)
+
 - **Purpose:** Stores information about product brands, allowing filtering and searching by brand.
 - **Key Features:**
   - Each brand is uniquely identified by a `brand_id`.
@@ -187,6 +191,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the brand is available for association with products.
 
 #### 3. Products Table (`products.products`)
+
 - **Purpose:** Stores detailed information about each product available on the platform.
 - **Key Features:**
   - Each product is uniquely identified by a `product_id`.
@@ -196,6 +201,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps track when the product was added and modified.
 
 #### 4. Product Specifications Table (`products.product_specifications`)
+
 - **Purpose:** Stores key-value pairs of specifications for each product.
 - **Key Features:**
   - Each specification is uniquely identified by a `specification_id`.
@@ -204,6 +210,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the specification was added.
 
 #### 5. Product Images Table (`products.product_images`)
+
 - **Purpose:** Stores images associated with products, enhancing visual presentation.
 - **Key Features:**
   - Each image is uniquely identified by an `image_id`.
@@ -213,6 +220,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the image was added.
 
 #### 6. Product Variants Table (`products.product_variants`)
+
 - **Purpose:** Stores variations of a product, such as different sizes or colors.
 - **Key Features:**
   - Each variant is uniquely identified by a `variant_id`.
@@ -222,6 +230,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps track when the variant was added and modified.
 
 #### 7. Warehouses Table (`products.warehouses`)
+
 - **Purpose:** Stores information about warehouses where products are stored.
 - **Key Features:**
   - Each warehouse is uniquely identified by a `warehouse_id`.
@@ -230,6 +239,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the warehouse was added.
 
 #### 8. Inventory Table (`products.inventory`)
+
 - **Purpose:** Tracks inventory levels of products and their variants across warehouses.
 - **Key Features:**
   - Each inventory record is uniquely identified by an `inventory_id`.
@@ -238,6 +248,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the inventory was modified.
 
 #### 9. Reviews Table (`products.reviews`)
+
 - **Purpose:** Stores user reviews for products, providing feedback and ratings.
 - **Key Features:**
   - Each review is uniquely identified by a `review_id`.
@@ -246,6 +257,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the review was submitted.
 
 #### 10. Inventory Alerts Table (`products.inventory_alerts`)
+
 - **Purpose:** Stores alerts related to inventory levels, such as low stock warnings.
 - **Key Features:**
   - Each alert is uniquely identified by an `alert_id`.
@@ -256,6 +268,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Orders Schema
 
 #### 1. Orders Table (`orders.orders`)
+
 - **Purpose:** Records all customer orders placed on the platform, tracking their status and financial details.
 - **Key Features:**
   - Each order is uniquely identified by an `order_id`.
@@ -267,6 +280,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps `created_at` and `updated_at` track when the order was created and last modified.
 
 #### 2. Order Items Table (`orders.order_items`)
+
 - **Purpose:** Details the individual items included in each order, including product information and pricing.
 - **Key Features:**
   - Each order item is uniquely identified by an `order_item_id`.
@@ -276,6 +290,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `unit_price` and `total_price` provide pricing information for the item.
 
 #### 3. Order History Table (`orders.order_history`)
+
 - **Purpose:** Tracks changes in the status of orders, providing a historical record of order processing.
 - **Key Features:**
   - Each history entry is uniquely identified by a `history_id`.
@@ -288,6 +303,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Payments Schema
 
 #### 1. Payment Methods Table (`payments.payment_methods`)
+
 - **Purpose:** Stores information about the various payment methods users can use on the platform.
 - **Key Features:**
   - Each payment method is uniquely identified by a `payment_method_id`.
@@ -300,6 +316,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the payment method is currently active and available for use.
 
 #### 2. Transactions Table (`payments.transactions`)
+
 - **Purpose:** Records all financial transactions processed through the platform.
 - **Key Features:**
   - Each transaction is uniquely identified by a `transaction_id`.
@@ -312,6 +329,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the transaction was processed.
 
 #### 3. Installment Plans Table (`payments.installment_plans`)
+
 - **Purpose:** Manages installment plans available for users to pay for their purchases over time.
 - **Key Features:**
   - Each installment plan is uniquely identified by a `plan_id`.
@@ -323,6 +341,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Shipping Schema
 
 #### 1. Carriers Table (`shipping.carriers`)
+
 - **Purpose:** Stores information about the shipping carriers available on the platform.
 - **Key Features:**
   - Each carrier is uniquely identified by a `carrier_id`.
@@ -331,6 +350,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the carrier is currently available for use.
 
 #### 2. Shipping Methods Table (`shipping.shipping_methods`)
+
 - **Purpose:** Defines the various shipping methods offered by the platform.
 - **Key Features:**
   - Each shipping method is uniquely identified by a `method_id`.
@@ -341,6 +361,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the shipping method is currently available for selection.
 
 #### 3. Shipments Table (`shipping.shipments`)
+
 - **Purpose:** Records all shipments processed through the platform, tracking their status and details.
 - **Key Features:**
   - Each shipment is uniquely identified by a `shipment_id`.
@@ -353,6 +374,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Analytics Schema
 
 #### 1. User Activity Table (`analytics.user_activity`)
+
 - **Purpose:** Tracks user interactions and activities on the platform, providing insights into user behavior.
 - **Key Features:**
   - Each activity is uniquely identified by an `activity_id`.
@@ -362,6 +384,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the activity occurred.
 
 #### 2. Product Views Table (`analytics.product_views`)
+
 - **Purpose:** Records views of products by users, helping to analyze product popularity and user interest.
 - **Key Features:**
   - Each view is uniquely identified by a `view_id`.
@@ -370,6 +393,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `viewed_at` records the timestamp when the product was viewed.
 
 #### 3. Sales Performance Table (`analytics.sales_performance`)
+
 - **Purpose:** Aggregates sales data to evaluate the performance of products and categories over time.
 - **Key Features:**
   - Each record is uniquely identified by a `performance_id`.
@@ -381,6 +405,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Marketplace Schema
 
 #### 1. Sellers Table (`marketplace.sellers`)
+
 - **Purpose:** Stores information about sellers who list products on the platform.
 - **Key Features:**
   - Each seller is uniquely identified by a `seller_id`.
@@ -391,6 +416,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` and `updated_at` track when the seller was added and last modified.
 
 #### 2. Seller Ratings Table (`marketplace.seller_ratings`)
+
 - **Purpose:** Records ratings and reviews for sellers, providing feedback on their performance.
 - **Key Features:**
   - Each rating is uniquely identified by a `rating_id`.
@@ -401,6 +427,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the rating was submitted.
 
 #### 3. Listings Table (`marketplace.listings`)
+
 - **Purpose:** Manages product listings by sellers, including pricing and availability.
 - **Key Features:**
   - Each listing is uniquely identified by a `listing_id`.
@@ -413,6 +440,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Promotions Schema
 
 #### 1. Promotions Table (`promotions.promotions`)
+
 - **Purpose:** Stores information about promotional campaigns available on the platform.
 - **Key Features:**
   - Each promotion is uniquely identified by a `promotion_id`.
@@ -424,6 +452,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the promotion is currently active.
 
 #### 2. Promotion Products Table (`promotions.promotion_products`)
+
 - **Purpose:** Links promotions to specific products, indicating which products are eligible for the promotion.
 - **Key Features:**
   - Each record is uniquely identified by a `promotion_product_id`.
@@ -432,6 +461,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the link was established.
 
 #### 3. Promotion Usage Table (`promotions.promotion_usage`)
+
 - **Purpose:** Tracks the usage of promotions by users, providing insights into promotion effectiveness.
 - **Key Features:**
   - Each usage record is uniquely identified by a `usage_id`.
@@ -443,6 +473,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Prime Schema
 
 #### 1. Prime Memberships Table (`prime.prime_memberships`)
+
 - **Purpose:** Stores information about users' prime memberships, including their status and benefits.
 - **Key Features:**
   - Each membership is uniquely identified by a `membership_id`.
@@ -453,6 +484,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` and `updated_at` track when the membership was added and last modified.
 
 #### 2. Prime Benefits Table (`prime.prime_benefits`)
+
 - **Purpose:** Defines the various benefits available to prime members.
 - **Key Features:**
   - Each benefit is uniquely identified by a `benefit_id`.
@@ -461,6 +493,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the benefit is currently available to members.
 
 #### 3. Prime Usage Table (`prime.prime_usage`)
+
 - **Purpose:** Tracks the usage of prime benefits by members, providing insights into benefit utilization.
 - **Key Features:**
   - Each usage record is uniquely identified by a `usage_id`.
@@ -471,6 +504,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Video Schema
 
 #### 1. Videos Table (`video.videos`)
+
 - **Purpose:** Stores information about videos available on the platform, including metadata and content details.
 - **Key Features:**
   - Each video is uniquely identified by a `video_id`.
@@ -482,6 +516,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` and `updated_at` track when the video was added and last modified.
 
 #### 2. Video Categories Table (`video.video_categories`)
+
 - **Purpose:** Organizes videos into categories for easier navigation and filtering.
 - **Key Features:**
   - Each category is uniquely identified by a `category_id`.
@@ -490,6 +525,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the category is currently available for use.
 
 #### 3. Video Views Table (`video.video_views`)
+
 - **Purpose:** Tracks views of videos by users, providing insights into video popularity and user engagement.
 - **Key Features:**
   - Each view is uniquely identified by a `view_id`.
@@ -502,6 +538,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Hepsiburada Users Schema
 
 #### 1. Users Table (`hepsiburada.users`)
+
 - **Purpose:** This table stores the core information for each user registered on the platform.
 - **Key Features:**
   - Each user is uniquely identified by a `user_id`.
@@ -513,6 +550,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Soft deletion is supported with the `is_deleted` and `deleted_at` fields, allowing accounts to be marked as deleted without permanent removal.
 
 #### 2. Contact Information Table (`hepsiburada.contact_info`)
+
 - **Purpose:** This table manages additional contact methods for users, such as alternative emails or phone numbers.
 - **Key Features:**
   - Each contact entry is uniquely identified by a `contact_id`.
@@ -521,7 +559,8 @@ This project implements a database system to analyze data from major Turkish e-c
   - `contact_value` holds the actual contact information.
   - The `is_primary` field indicates if this is the user's primary contact method.
 
-#### 3. Saved Carts Table (`hepsiburada.saved_carts`)
+#### 3. Saved Carts Table (`hepsiburada.cart`)
+
 - **Purpose:** This table allows users to save their shopping carts for future purchases.
 - **Key Features:**
   - Each saved cart is uniquely identified by a `cart_id`.
@@ -530,6 +569,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps `created_at` and `updated_at` track when the cart was created and last modified.
 
 #### 4. User Roles Table (`hepsiburada.user_roles`)
+
 - **Purpose:** This table assigns roles to users, defining their permissions and access levels within the platform.
 - **Key Features:**
   - Each role assignment is uniquely identified by a `role_id`.
@@ -538,6 +578,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `created_at` timestamp records when the role was assigned.
 
 #### 5. Addresses Table (`hepsiburada.addresses`)
+
 - **Purpose:** This table stores multiple addresses for users, such as billing and shipping addresses.
 - **Key Features:**
   - Each address is uniquely identified by an `address_id`.
@@ -547,6 +588,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_default` field indicates if this is the user's default address for transactions.
 
 #### 6. Preferences Table (`hepsiburada.preferences`)
+
 - **Purpose:** This table stores user preferences for language, currency, and notification settings.
 - **Key Features:**
   - Each preference set is uniquely identified by a `preference_id`.
@@ -555,6 +597,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `notification_settings` and `privacy_settings` are JSON objects that store user-specific settings for notifications and privacy.
 
 #### 7. User Security Table (`hepsiburada.user_security`)
+
 - **Purpose:** This table manages security settings for users, including two-factor authentication and security questions.
 - **Key Features:**
   - Each security setting is uniquely identified by a `security_id`.
@@ -563,6 +606,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `security_questions` is a JSON array storing security questions and answers for account recovery.
 
 #### 8. Languages Table (`hepsiburada.languages`)
+
 - **Purpose:** This table defines the languages supported by the platform.
 - **Key Features:**
   - Each language is uniquely identified by a `language_code`.
@@ -570,6 +614,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_default` field indicates if this language is the default for the platform.
 
 #### 9. Saved Payments Table (`hepsiburada.saved_payments`)
+
 - **Purpose:** This table allows users to save their preferred payment methods for quick access during checkout.
 - **Key Features:**
   - Each saved payment method is uniquely identified by a `saved_payment_id`.
@@ -581,6 +626,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Hepsiburada Products Schema
 
 #### 1. Categories Table (`hepsiburada.categories`)
+
 - **Purpose:** Organizes products into hierarchical categories for easier navigation and filtering.
 - **Key Features:**
   - Each category is uniquely identified by a `category_id`.
@@ -590,6 +636,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the category is visible to users.
 
 #### 2. Brands Table (`hepsiburada.brands`)
+
 - **Purpose:** Stores information about product brands, allowing filtering and searching by brand.
 - **Key Features:**
   - Each brand is uniquely identified by a `brand_id`.
@@ -598,6 +645,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the brand is available for association with products.
 
 #### 3. Products Table (`hepsiburada.products`)
+
 - **Purpose:** Stores detailed information about each product available on the platform.
 - **Key Features:**
   - Each product is uniquely identified by a `product_id`.
@@ -607,6 +655,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps track when the product was added and modified.
 
 #### 4. Product Specifications Table (`hepsiburada.product_specifications`)
+
 - **Purpose:** Stores key-value pairs of specifications for each product.
 - **Key Features:**
   - Each specification is uniquely identified by a `specification_id`.
@@ -615,6 +664,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the specification was added.
 
 #### 5. Product Images Table (`hepsiburada.product_images`)
+
 - **Purpose:** Stores images associated with products, enhancing visual presentation.
 - **Key Features:**
   - Each image is uniquely identified by an `image_id`.
@@ -624,6 +674,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the image was added.
 
 #### 6. Product Variants Table (`hepsiburada.product_variants`)
+
 - **Purpose:** Stores variations of a product, such as different sizes or colors.
 - **Key Features:**
   - Each variant is uniquely identified by a `variant_id`.
@@ -633,6 +684,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps track when the variant was added and modified.
 
 #### 7. Warehouses Table (`hepsiburada.warehouses`)
+
 - **Purpose:** Stores information about warehouses where products are stored.
 - **Key Features:**
   - Each warehouse is uniquely identified by a `warehouse_id`.
@@ -641,6 +693,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the warehouse was added.
 
 #### 8. Inventory Table (`hepsiburada.inventory`)
+
 - **Purpose:** Tracks inventory levels of products and their variants across warehouses.
 - **Key Features:**
   - Each inventory record is uniquely identified by an `inventory_id`.
@@ -649,6 +702,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the inventory was modified.
 
 #### 9. Reviews Table (`hepsiburada.reviews`)
+
 - **Purpose:** Stores user reviews for products, providing feedback and ratings.
 - **Key Features:**
   - Each review is uniquely identified by a `review_id`.
@@ -657,6 +711,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the review was submitted.
 
 #### 10. Inventory Alerts Table (`hepsiburada.inventory_alerts`)
+
 - **Purpose:** Stores alerts related to inventory levels, such as low stock warnings.
 - **Key Features:**
   - Each alert is uniquely identified by an `alert_id`.
@@ -667,6 +722,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Hepsiburada Orders Schema
 
 #### 1. Orders Table (`hepsiburada.orders`)
+
 - **Purpose:** Records all customer orders placed on the platform, tracking their status and financial details.
 - **Key Features:**
   - Each order is uniquely identified by an `order_id`.
@@ -678,6 +734,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps `created_at` and `updated_at` track when the order was created and last modified.
 
 #### 2. Order Items Table (`hepsiburada.order_items`)
+
 - **Purpose:** Details the individual items included in each order, including product information and pricing.
 - **Key Features:**
   - Each order item is uniquely identified by an `order_item_id`.
@@ -687,6 +744,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `unit_price` and `total_price` provide pricing information for the item.
 
 #### 3. Order History Table (`hepsiburada.order_history`)
+
 - **Purpose:** Tracks changes in the status of orders, providing a historical record of order processing.
 - **Key Features:**
   - Each history entry is uniquely identified by a `history_id`.
@@ -699,6 +757,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Hepsiburada Payments Schema
 
 #### 1. Payment Methods Table (`hepsiburada.payment_methods`)
+
 - **Purpose:** Stores information about the various payment methods users can use on the platform.
 - **Key Features:**
   - Each payment method is uniquely identified by a `payment_method_id`.
@@ -711,6 +770,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the payment method is currently active and available for use.
 
 #### 2. Transactions Table (`hepsiburada.transactions`)
+
 - **Purpose:** Records all financial transactions processed through the platform.
 - **Key Features:**
   - Each transaction is uniquely identified by a `transaction_id`.
@@ -723,6 +783,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the transaction was processed.
 
 #### 3. Installment Plans Table (`hepsiburada.installment_plans`)
+
 - **Purpose:** Manages installment plans available for users to pay for their purchases over time.
 - **Key Features:**
   - Each installment plan is uniquely identified by a `plan_id`.
@@ -734,6 +795,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Hepsiburada Shipping Schema
 
 #### 1. Carriers Table (`hepsiburada.carriers`)
+
 - **Purpose:** Stores information about the shipping carriers available on the platform.
 - **Key Features:**
   - Each carrier is uniquely identified by a `carrier_id`.
@@ -742,6 +804,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the carrier is currently available for use.
 
 #### 2. Shipping Methods Table (`hepsiburada.shipping_methods`)
+
 - **Purpose:** Defines the various shipping methods offered by the platform.
 - **Key Features:**
   - Each shipping method is uniquely identified by a `method_id`.
@@ -752,6 +815,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the shipping method is currently available for selection.
 
 #### 3. Shipments Table (`hepsiburada.shipments`)
+
 - **Purpose:** Records all shipments processed through the platform, tracking their status and details.
 - **Key Features:**
   - Each shipment is uniquely identified by a `shipment_id`.
@@ -761,37 +825,10 @@ This project implements a database system to analyze data from major Turkish e-c
   - `status` tracks the current state of the shipment (e.g., in transit, delivered).
   - `shipped_at` and `delivered_at` record the timestamps for when the shipment was sent and received.
 
-### Hepsiburada Analytics Schema
-
-#### 1. User Activity Table (`hepsiburada.user_activity`)
-- **Purpose:** Tracks user interactions and activities on the platform, providing insights into user behavior.
-- **Key Features:**
-  - Each activity is uniquely identified by an `activity_id`.
-  - `user_id` links the activity to a specific user.
-  - `activity_type` specifies the type of activity (e.g., login, purchase).
-  - `activity_details` stores additional information about the activity in a JSONB format.
-  - `created_at` records when the activity occurred.
-
-#### 2. Product Views Table (`hepsiburada.product_views`)
-- **Purpose:** Records views of products by users, helping to analyze product popularity and user interest.
-- **Key Features:**
-  - Each view is uniquely identified by a `view_id`.
-  - `user_id` links the view to a specific user.
-  - `product_id` references the product that was viewed.
-  - `viewed_at` records the timestamp when the product was viewed.
-
-#### 3. Sales Performance Table (`hepsiburada.sales_performance`)
-- **Purpose:** Aggregates sales data to evaluate the performance of products and categories over time.
-- **Key Features:**
-  - Each record is uniquely identified by a `performance_id`.
-  - `product_id` and `category_id` link the performance data to specific products and categories.
-  - `sales_date` records the date of the sales data.
-  - `units_sold` and `total_revenue` provide metrics on sales volume and revenue.
-  - `created_at` records when the performance data was generated.
-
 ### Hepsiburada Marketplace Schema
 
 #### 1. Sellers Table (`hepsiburada.sellers`)
+
 - **Purpose:** Stores information about sellers who list products on the platform.
 - **Key Features:**
   - Each seller is uniquely identified by a `seller_id`.
@@ -802,6 +839,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` and `updated_at` track when the seller was added and last modified.
 
 #### 2. Seller Ratings Table (`hepsiburada.seller_ratings`)
+
 - **Purpose:** Records ratings and reviews for sellers, providing feedback on their performance.
 - **Key Features:**
   - Each rating is uniquely identified by a `rating_id`.
@@ -812,6 +850,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the rating was submitted.
 
 #### 3. Listings Table (`hepsiburada.listings`)
+
 - **Purpose:** Manages product listings by sellers, including pricing and availability.
 - **Key Features:**
   - Each listing is uniquely identified by a `listing_id`.
@@ -824,6 +863,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Hepsiburada Promotions Schema
 
 #### 1. Promotions Table (`hepsiburada.promotions`)
+
 - **Purpose:** Stores information about promotional campaigns available on the platform.
 - **Key Features:**
   - Each promotion is uniquely identified by a `promotion_id`.
@@ -835,6 +875,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the promotion is currently active.
 
 #### 2. Promotion Products Table (`hepsiburada.promotion_products`)
+
 - **Purpose:** Links promotions to specific products, indicating which products are eligible for the promotion.
 - **Key Features:**
   - Each record is uniquely identified by a `promotion_product_id`.
@@ -843,6 +884,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the link was established.
 
 #### 3. Promotion Usage Table (`hepsiburada.promotion_usage`)
+
 - **Purpose:** Tracks the usage of promotions by users, providing insights into promotion effectiveness.
 - **Key Features:**
   - Each usage record is uniquely identified by a `usage_id`.
@@ -854,6 +896,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Hepsiburada Premium Schema
 
 #### 1. Premium Memberships Table (`hepsiburada.premium_memberships`)
+
 - **Purpose:** Stores information about users' premium memberships, including their status and benefits.
 - **Key Features:**
   - Each membership is uniquely identified by a `membership_id`.
@@ -864,6 +907,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` and `updated_at` track when the membership was added and last modified.
 
 #### 2. Premium Benefits Table (`hepsiburada.premium_benefits`)
+
 - **Purpose:** Defines the various benefits available to premium members.
 - **Key Features:**
   - Each benefit is uniquely identified by a `benefit_id`.
@@ -872,6 +916,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the benefit is currently available to members.
 
 #### 3. Premium Usage Table (`hepsiburada.premium_usage`)
+
 - **Purpose:** Tracks the usage of premium benefits by members, providing insights into benefit utilization.
 - **Key Features:**
   - Each usage record is uniquely identified by a `usage_id`.
@@ -884,6 +929,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Users Schema
 
 #### 1. Users Table (`trendyol.users`)
+
 - **Purpose:** This table stores the core information for each user registered on the platform.
 - **Key Features:**
   - Each user is uniquely identified by a `user_id`.
@@ -895,6 +941,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Soft deletion is supported with the `is_deleted` and `deleted_at` fields, allowing accounts to be marked as deleted without permanent removal.
 
 #### 2. Contact Information Table (`trendyol.contact_info`)
+
 - **Purpose:** This table manages additional contact methods for users, such as alternative emails or phone numbers.
 - **Key Features:**
   - Each contact entry is uniquely identified by a `contact_id`.
@@ -903,7 +950,8 @@ This project implements a database system to analyze data from major Turkish e-c
   - `contact_value` holds the actual contact information.
   - The `is_primary` field indicates if this is the user's primary contact method.
 
-#### 3. Saved Carts Table (`trendyol.saved_carts`)
+#### 3. Saved Carts Table (`trendyol.cart`)
+
 - **Purpose:** This table allows users to save their shopping carts for future purchases.
 - **Key Features:**
   - Each saved cart is uniquely identified by a `cart_id`.
@@ -912,6 +960,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps `created_at` and `updated_at` track when the cart was created and last modified.
 
 #### 4. User Roles Table (`trendyol.user_roles`)
+
 - **Purpose:** This table assigns roles to users, defining their permissions and access levels within the platform.
 - **Key Features:**
   - Each role assignment is uniquely identified by a `role_id`.
@@ -920,6 +969,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `created_at` timestamp records when the role was assigned.
 
 #### 5. Addresses Table (`trendyol.addresses`)
+
 - **Purpose:** This table stores multiple addresses for users, such as billing and shipping addresses.
 - **Key Features:**
   - Each address is uniquely identified by an `address_id`.
@@ -929,6 +979,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_default` field indicates if this is the user's default address for transactions.
 
 #### 6. Preferences Table (`trendyol.preferences`)
+
 - **Purpose:** This table stores user preferences for language, currency, and notification settings.
 - **Key Features:**
   - Each preference set is uniquely identified by a `preference_id`.
@@ -937,6 +988,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `notification_settings` and `privacy_settings` are JSON objects that store user-specific settings for notifications and privacy.
 
 #### 7. User Security Table (`trendyol.user_security`)
+
 - **Purpose:** This table manages security settings for users, including two-factor authentication and security questions.
 - **Key Features:**
   - Each security setting is uniquely identified by a `security_id`.
@@ -945,6 +997,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `security_questions` is a JSON array storing security questions and answers for account recovery.
 
 #### 8. Languages Table (`trendyol.languages`)
+
 - **Purpose:** This table defines the languages supported by the platform.
 - **Key Features:**
   - Each language is uniquely identified by a `language_code`.
@@ -952,6 +1005,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_default` field indicates if this language is the default for the platform.
 
 #### 9. Saved Payments Table (`trendyol.saved_payments`)
+
 - **Purpose:** This table allows users to save their preferred payment methods for quick access during checkout.
 - **Key Features:**
   - Each saved payment method is uniquely identified by a `saved_payment_id`.
@@ -963,6 +1017,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Products Schema
 
 #### 1. Categories Table (`trendyol.categories`)
+
 - **Purpose:** Organizes products into hierarchical categories for easier navigation and filtering.
 - **Key Features:**
   - Each category is uniquely identified by a `category_id`.
@@ -972,6 +1027,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the category is visible to users.
 
 #### 2. Brands Table (`trendyol.brands`)
+
 - **Purpose:** Stores information about product brands, allowing filtering and searching by brand.
 - **Key Features:**
   - Each brand is uniquely identified by a `brand_id`.
@@ -980,6 +1036,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the brand is available for association with products.
 
 #### 3. Products Table (`trendyol.products`)
+
 - **Purpose:** Stores detailed information about each product available on the platform.
 - **Key Features:**
   - Each product is uniquely identified by a `product_id`.
@@ -989,6 +1046,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps track when the product was added and modified.
 
 #### 4. Product Specifications Table (`trendyol.product_specifications`)
+
 - **Purpose:** Stores key-value pairs of specifications for each product.
 - **Key Features:**
   - Each specification is uniquely identified by a `specification_id`.
@@ -997,6 +1055,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the specification was added.
 
 #### 5. Product Images Table (`trendyol.product_images`)
+
 - **Purpose:** Stores images associated with products, enhancing visual presentation.
 - **Key Features:**
   - Each image is uniquely identified by an `image_id`.
@@ -1006,6 +1065,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the image was added.
 
 #### 6. Product Variants Table (`trendyol.product_variants`)
+
 - **Purpose:** Stores variations of a product, such as different sizes or colors.
 - **Key Features:**
   - Each variant is uniquely identified by a `variant_id`.
@@ -1015,6 +1075,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps track when the variant was added and modified.
 
 #### 7. Warehouses Table (`trendyol.warehouses`)
+
 - **Purpose:** Stores information about warehouses where products are stored.
 - **Key Features:**
   - Each warehouse is uniquely identified by a `warehouse_id`.
@@ -1023,6 +1084,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the warehouse was added.
 
 #### 8. Inventory Table (`trendyol.inventory`)
+
 - **Purpose:** Tracks inventory levels of products and their variants across warehouses.
 - **Key Features:**
   - Each inventory record is uniquely identified by an `inventory_id`.
@@ -1031,6 +1093,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the inventory was modified.
 
 #### 9. Reviews Table (`trendyol.reviews`)
+
 - **Purpose:** Stores user reviews for products, providing feedback and ratings.
 - **Key Features:**
   - Each review is uniquely identified by a `review_id`.
@@ -1039,6 +1102,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamp records when the review was submitted.
 
 #### 10. Inventory Alerts Table (`trendyol.inventory_alerts`)
+
 - **Purpose:** Stores alerts related to inventory levels, such as low stock warnings.
 - **Key Features:**
   - Each alert is uniquely identified by an `alert_id`.
@@ -1049,6 +1113,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Orders Schema
 
 #### 1. Orders Table (`trendyol.orders`)
+
 - **Purpose:** Records all customer orders placed on the platform, tracking their status and financial details.
 - **Key Features:**
   - Each order is uniquely identified by an `order_id`.
@@ -1060,6 +1125,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps `created_at` and `updated_at` track when the order was created and last modified.
 
 #### 2. Order Items Table (`trendyol.order_items`)
+
 - **Purpose:** Details the individual items included in each order, including product information and pricing.
 - **Key Features:**
   - Each order item is uniquely identified by an `order_item_id`.
@@ -1069,6 +1135,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `unit_price` and `total_price` provide pricing information for the item.
 
 #### 3. Order History Table (`trendyol.order_history`)
+
 - **Purpose:** Tracks changes in the status of orders, providing a historical record of order processing.
 - **Key Features:**
   - Each history entry is uniquely identified by a `history_id`.
@@ -1081,6 +1148,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Payments Schema
 
 #### 1. Payment Methods Table (`trendyol.payment_methods`)
+
 - **Purpose:** Stores information about the various payment methods users can use on the platform.
 - **Key Features:**
   - Each payment method is uniquely identified by a `payment_method_id`.
@@ -1093,6 +1161,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the payment method is currently active and available for use.
 
 #### 2. Transactions Table (`trendyol.transactions`)
+
 - **Purpose:** Records all financial transactions processed through the platform.
 - **Key Features:**
   - Each transaction is uniquely identified by a `transaction_id`.
@@ -1105,6 +1174,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the transaction was processed.
 
 #### 3. Installment Plans Table (`trendyol.installment_plans`)
+
 - **Purpose:** Manages installment plans available for users to pay for their purchases over time.
 - **Key Features:**
   - Each installment plan is uniquely identified by a `plan_id`.
@@ -1116,6 +1186,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Shipping Schema
 
 #### 1. Carriers Table (`trendyol.carriers`)
+
 - **Purpose:** Stores information about the shipping carriers available on the platform.
 - **Key Features:**
   - Each carrier is uniquely identified by a `carrier_id`.
@@ -1124,6 +1195,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the carrier is currently available for use.
 
 #### 2. Shipping Methods Table (`trendyol.shipping_methods`)
+
 - **Purpose:** Defines the various shipping methods offered by the platform.
 - **Key Features:**
   - Each shipping method is uniquely identified by a `method_id`.
@@ -1134,6 +1206,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the shipping method is currently available for selection.
 
 #### 3. Shipments Table (`trendyol.shipments`)
+
 - **Purpose:** Records all shipments processed through the platform, tracking their status and details.
 - **Key Features:**
   - Each shipment is uniquely identified by a `shipment_id`.
@@ -1146,6 +1219,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Analytics Schema
 
 #### 1. User Activity Table (`trendyol.user_activity`)
+
 - **Purpose:** Tracks user interactions and activities on the platform, providing insights into user behavior.
 - **Key Features:**
   - Each activity is uniquely identified by an `activity_id`.
@@ -1155,6 +1229,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the activity occurred.
 
 #### 2. Product Views Table (`trendyol.product_views`)
+
 - **Purpose:** Records views of products by users, helping to analyze product popularity and user interest.
 - **Key Features:**
   - Each view is uniquely identified by a `view_id`.
@@ -1163,6 +1238,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `viewed_at` records the timestamp when the product was viewed.
 
 #### 3. Sales Performance Table (`trendyol.sales_performance`)
+
 - **Purpose:** Aggregates sales data to evaluate the performance of products and categories over time.
 - **Key Features:**
   - Each record is uniquely identified by a `performance_id`.
@@ -1174,6 +1250,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Marketplace Schema
 
 #### 1. Sellers Table (`trendyol.sellers`)
+
 - **Purpose:** Stores information about sellers who list products on the platform.
 - **Key Features:**
   - Each seller is uniquely identified by a `seller_id`.
@@ -1184,6 +1261,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` and `updated_at` track when the seller was added and last modified.
 
 #### 2. Seller Ratings Table (`trendyol.seller_ratings`)
+
 - **Purpose:** Records ratings and reviews for sellers, providing feedback on their performance.
 - **Key Features:**
   - Each rating is uniquely identified by a `rating_id`.
@@ -1194,6 +1272,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the rating was submitted.
 
 #### 3. Listings Table (`trendyol.listings`)
+
 - **Purpose:** Manages product listings by sellers, including pricing and availability.
 - **Key Features:**
   - Each listing is uniquely identified by a `listing_id`.
@@ -1206,6 +1285,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Promotions Schema
 
 #### 1. Promotions Table (`trendyol.promotions`)
+
 - **Purpose:** Stores information about promotional campaigns available on the platform.
 - **Key Features:**
   - Each promotion is uniquely identified by a `promotion_id`.
@@ -1217,6 +1297,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the promotion is currently active.
 
 #### 2. Promotion Products Table (`trendyol.promotion_products`)
+
 - **Purpose:** Links promotions to specific products, indicating which products are eligible for the promotion.
 - **Key Features:**
   - Each record is uniquely identified by a `promotion_product_id`.
@@ -1225,6 +1306,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` records when the link was established.
 
 #### 3. Promotion Usage Table (`trendyol.promotion_usage`)
+
 - **Purpose:** Tracks the usage of promotions by users, providing insights into promotion effectiveness.
 - **Key Features:**
   - Each usage record is uniquely identified by a `usage_id`.
@@ -1236,6 +1318,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Yemek Schema
 
 #### 1. Restaurants Table (`trendyol_yemek.restaurants`)
+
 - **Purpose:** Stores information about restaurants available on the platform.
 - **Key Features:**
   - Each restaurant is uniquely identified by a `restaurant_id`.
@@ -1246,6 +1329,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` and `updated_at` track when the restaurant was added and last modified.
 
 #### 2. Menus Table (`trendyol_yemek.menus`)
+
 - **Purpose:** Stores menu items offered by restaurants.
 - **Key Features:**
   - Each menu item is uniquely identified by a `menu_id`.
@@ -1256,6 +1340,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - The `is_active` field indicates if the menu item is currently available.
 
 #### 3. Orders Table (`trendyol_yemek.orders`)
+
 - **Purpose:** Records all food orders placed on the platform, tracking their status and details.
 - **Key Features:**
   - Each order is uniquely identified by an `order_id`.
@@ -1269,6 +1354,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Trendyol Market Schema
 
 #### 1. Stores Table (`trendyol_market.stores`)
+
 - **Purpose:** Stores information about stores available on the platform.
 - **Key Features:**
   - Each store is uniquely identified by a `store_id`.
@@ -1279,6 +1365,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - `created_at` and `updated_at` track when the store was added and last modified.
 
 #### 2. Products Table (`trendyol_market.products`)
+
 - **Purpose:** Stores detailed information about each product available in the market.
 - **Key Features:**
   - Each product is uniquely identified by a `product_id`.
@@ -1289,6 +1376,7 @@ This project implements a database system to analyze data from major Turkish e-c
   - Timestamps track when the product was added and modified.
 
 #### 3. Orders Table (`trendyol_market.orders`)
+
 - **Purpose:** Records all market orders placed on the platform, tracking their status and details.
 - **Key Features:**
   - Each order is uniquely identified by an `order_id`.
@@ -1298,7 +1386,6 @@ This project implements a database system to analyze data from major Turkish e-c
   - `status` tracks the current state of the order (e.g., pending, delivered).
   - `total_amount` records the total cost of the order.
   - Timestamps `created_at` and `updated_at` track when the order was created and last modified.
-
 
 ## EER Diagram Creation
 
@@ -1339,6 +1426,7 @@ This project implements a database system to analyze data from major Turkish e-c
 ### Docker Setup
 
 1. **Build the Docker Image**
+
    ```bash
    docker build -t ecommerce-db .
    ```
@@ -1351,16 +1439,19 @@ This project implements a database system to analyze data from major Turkish e-c
    ```
 
 This will:
+
 - Build the image with all database schemas and initialization scripts
 - Start a container named 'ecommerce-postgres'
 - Map port 5432 to allow local connections
 - Set up the databases with the configured credentials
 
 ## TODO
+
 ### AMAZON
-* Relationların PK ve FK'ları derstekine uygun değişicek
-* EER diagram oluşucak
-* Data requirements yazılacak
+
+- Relationların PK ve FK'ları derstekine uygun değişicek
+- EER diagram oluşucak
+- Data requirements yazılacak
 
 ## Usage
 
@@ -1369,40 +1460,3 @@ After setting up the database, you can connect to it using your preferred SQL cl
 ## Setting Up Amazon Diagram on macOS
 
 To set up and view the `amazon_diagram.puml` on a macOS machine, follow these steps:
-
-### Prerequisites
-
-1. **Install Java:**
-   - Ensure Java is installed on your system. You can check this by running `java -version` in the terminal.
-   - If Java is not installed, download and install it from the [official Oracle website](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) or use Homebrew:
-     ```bash
-     brew install openjdk
-     ```
-
-2. **Install Graphviz:**
-   - Graphviz is required by PlantUML to render diagrams. Install it using Homebrew:
-     ```bash
-     brew install graphviz
-     ```
-
-3. **Download PlantUML:**
-   - Ensure you have the `plantuml.jar` file. If not, download it from the [official PlantUML website](http://plantuml.com/download).
-
-### Steps to Generate and View the Diagram
-
-1. **Navigate to the Directory:**
-   - Open the terminal and navigate to the directory containing your `amazon_diagram.puml` and `plantuml.jar` files:
-     ```bash
-     cd path/to/your/diagrams
-     ```
-
-2. **Generate the Diagram:**
-   - Run the following command to generate a PNG or PDF of the diagram:
-     ```bash
-     java -jar plantuml.jar amazon_diagram.puml
-     ```
-   - This will create a `amazon_diagram.png` or `amazon_diagram.pdf` file in the same directory.
-
-3. **View the Diagram:**
-   - Open the generated PNG or PDF file using the Preview app or any other image/PDF viewer on macOS.
-

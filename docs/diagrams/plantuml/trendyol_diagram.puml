@@ -26,7 +26,7 @@ entity "Contact Info" as contact_info {
   is_primary : Boolean
 }
 
-entity "Saved Carts" as saved_carts {
+entity "Saved Carts" as cart {
   *cart_id : UUID
   --
   user_id : UUID
@@ -461,7 +461,7 @@ entity "Market Orders" as market_orders {
 }
 
 users ||--o{ contact_info
-users ||--o{ saved_carts
+users ||--o{ cart
 users ||--o{ user_roles
 users ||--o{ addresses
 users ||--o{ preferences

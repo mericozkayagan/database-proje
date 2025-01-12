@@ -1,4 +1,4 @@
-\c amazon
+\c main
 
 -- Insert dummy users
 INSERT INTO users.users (email, password_hash, password_salt, first_name, last_name, phone) VALUES
@@ -7,8 +7,8 @@ INSERT INTO users.users (email, password_hash, password_salt, first_name, last_n
 ('ali.yilmaz@email.com', 'hash3', 'salt3', 'Ali', 'Yılmaz', '+905559876543');
 
 -- Insert payment methods
-INSERT INTO payments.payment_methods (user_id, type, provider, account_number, expiry_date, is_default, is_active)
-SELECT user_id, 'credit_card', 'Visa', '4111111111111111', '2025-12-31', TRUE, TRUE FROM users.users;
+INSERT INTO payments.payment_methods (type, provider, account_number, expiry_date, is_default, is_active)
+VALUES ('credit_card', 'Visa', '4111111111111111', '2025-12-31', TRUE, TRUE);
 
 -- Insert saved payments
 INSERT INTO users.saved_payments (user_id, payment_method_id, nickname, is_active)
@@ -20,7 +20,7 @@ INSERT INTO users.contact_info (user_id, contact_type, contact_value, is_primary
 SELECT user_id, 'email', email, TRUE FROM users.users;
 
 -- Insert saved carts
-INSERT INTO users.saved_carts (user_id, cart_items)
+INSERT INTO users.cart (user_id, cart_items)
 SELECT user_id, '[{"product_id": "some-product-id", "quantity": 2}]'::jsonb FROM users.users;
 
 -- Insert user roles
@@ -32,7 +32,7 @@ INSERT INTO users.addresses (user_id, address_type, address_line1, city, postal_
 SELECT user_id, 'shipping', 'Test Address 123', 'Istanbul', '34000', 'TR', TRUE FROM users.users;
 
 -- Insert user preferences
-INSERT INTO users.preferences (user_id, default_language, default_currency, notification_settings, privacy_settings)
+INSERT INTO users.preferences (user_id, language_code, currency_code, notification_settings, privacy_settings)
 SELECT user_id, 'en_US', 'USD', '{"email": true}'::jsonb, '{"share_data": false}'::jsonb FROM users.users;
 
 -- Insert user security settings
@@ -87,28 +87,30 @@ INSERT INTO products.product_variants (product_id, sku, name, attributes)
 SELECT p.product_id, 'SKU-' || generate_series(1,5), 'Variant for product ' || generate_series(1,5), '{"color": "red", "size": "M"}'::jsonb FROM products.products p LIMIT 5;
 
 -- Insert warehouses
-INSERT INTO products.warehouses (name, code, address_line1, city, postal_code, country_code)
-VALUES ('Main Warehouse', 'WH001', 'Warehouse Address', 'Istanbul', '34000', 'TR');
+INSERT INTO products.warehouses (name, code, is_active)
+VALUES ('Main Warehouse', 'WH001', TRUE);
+
+-- Insert addresses for warehouses
+INSERT INTO products.addresses (address_line1, city, postal_code, country_code)
+VALUES ('Warehouse Address', 'Istanbul', '34000', 'TR');
 
 -- Insert inventory
-INSERT INTO products.inventory (product_id, variant_id, warehouse_id, quantity, reserved_quantity, reorder_point)
-SELECT p.product_id, v.variant_id, w.warehouse_id, 100, 10, 20
+INSERT INTO products.inventory (product_id, variant_id, quantity, reserved_quantity, reorder_point)
+SELECT p.product_id, v.variant_id, 100, 10, 20
 FROM products.products p
 CROSS JOIN products.product_variants v
+LIMIT 1;
+
+-- Insert inventory-warehouse relationships
+INSERT INTO products.inventory_warehouse (inventory_id, warehouse_id)
+SELECT i.inventory_id, w.warehouse_id
+FROM products.inventory i
 CROSS JOIN products.warehouses w
 LIMIT 1;
 
 -- Insert product reviews
 INSERT INTO products.reviews (product_id, user_id, rating, comment)
 SELECT p.product_id, u.user_id, 5, 'Great product!' FROM products.products p CROSS JOIN users.users u LIMIT 3;
-
--- Insert inventory alerts
-INSERT INTO products.inventory_alerts (product_id, variant_id, warehouse_id, alert_type, alert_details)
-SELECT p.product_id, v.variant_id, w.warehouse_id, 'low stock', '{"threshold": 10}'::jsonb
-FROM products.products p
-CROSS JOIN products.product_variants v
-CROSS JOIN products.warehouses w
-LIMIT 1;
 
 -- Insert orders
 INSERT INTO orders.orders (user_id, order_number, status, currency_code, subtotal, shipping_cost, tax_amount, total_amount)
@@ -158,9 +160,13 @@ SELECT user_id, 'annual', 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + inter
 INSERT INTO video.content (title, description, type, release_year, rating, duration_minutes, is_prime_exclusive)
 VALUES ('Sample Movie', 'A great movie', 'movie', 2023, 'PG', 120, TRUE);
 
--- Insert video episodes
-INSERT INTO video.episodes (content_id, season_number, episode_number, title, description, duration_minutes)
-SELECT c.content_id, 1, 1, 'Episode 1', 'First episode', 45 FROM video.content c;
+-- Insert series
+INSERT INTO video.series (content_id, season_number, episode_number, title, description, duration_minutes)
+SELECT c.content_id, 1, 1, 'Episode 1', 'First episode', 45 FROM video.content c WHERE c.type = 'series';
+
+-- Insert film
+INSERT INTO video.film (content_id, duration_minutes)
+SELECT c.content_id, 120 FROM video.content c WHERE c.type = 'movie';
 
 -- Insert watch history for a movie
 INSERT INTO video.watch_history (user_id, content_id, watched_duration)
@@ -172,9 +178,9 @@ LIMIT 1;
 
 -- Insert watch history for an episode
 INSERT INTO video.watch_history (user_id, episode_id, watched_duration)
-SELECT u.user_id, e.episode_id, 45
+SELECT u.user_id, e.series_id, 45
 FROM users.users u
-CROSS JOIN video.episodes e
+CROSS JOIN video.series e
 LIMIT 1;
 
 -- Insert promotions campaigns
@@ -189,18 +195,6 @@ SELECT c.campaign_id, p.product_id FROM promotions.campaigns c CROSS JOIN produc
 INSERT INTO promotions.promotion_rules (campaign_id, rule_type, rule_details)
 SELECT c.campaign_id, 'discount', '{"percentage": 10}'::jsonb FROM promotions.campaigns c LIMIT 1;
 
--- Insert user recommendations
-INSERT INTO analytics.user_recommendations (user_id, recommended_products)
-SELECT u.user_id, '[{"product_id": "some-product-id", "score": 0.95}]'::jsonb FROM users.users u LIMIT 1;
-
--- Insert search indexes
-INSERT INTO analytics.search_indexes (table_name, index_details)
-VALUES ('products', '{"fields": ["name", "description"]}'::jsonb);
-
--- Insert seller locations
-INSERT INTO marketplace.seller_locations (seller_id, warehouse_id, is_primary)
-SELECT s.seller_id, w.warehouse_id, TRUE FROM marketplace.sellers s CROSS JOIN products.warehouses w LIMIT 1;
-
 -- Insert benefit eligibility for Prime
-INSERT INTO prime.benefit_eligibility (country_code, is_video_included, is_shipping_included, is_music_included)
-VALUES ('TR', TRUE, TRUE, FALSE);
+INSERT INTO prime.benefit_eligibility (content_id, country_code, is_video_included)
+SELECT c.content_id, 'TR', TRUE FROM video.content c LIMIT 1;

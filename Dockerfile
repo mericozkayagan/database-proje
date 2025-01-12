@@ -17,8 +17,8 @@ RUN mkdir -p /docker-entrypoint-initdb.d
 # Copy initialization scripts in correct order
 COPY ./init-scripts/00-init-extensions.sql /docker-entrypoint-initdb.d/00-init-extensions.sql
 COPY ./init-scripts/01-create-databases.sql /docker-entrypoint-initdb.d/01-create-databases.sql
-COPY ./init-scripts/02-amazon-init.sql /docker-entrypoint-initdb.d/02-amazon-init.sql
-COPY ./init-scripts/03-amazon-dummy-data.sql /docker-entrypoint-initdb.d/05-amazon-dummy-data.sql
+COPY ./init-scripts/02-init.sql /docker-entrypoint-initdb.d/02-init.sql
+COPY ./init-scripts/03-dummy-data.sql /docker-entrypoint-initdb.d/03-dummy-data.sql
 
 # Set permissions
 RUN chmod -R 755 /docker-entrypoint-initdb.d
@@ -27,4 +27,4 @@ RUN chmod -R 755 /docker-entrypoint-initdb.d
 EXPOSE 5432
 
 LABEL version="1.0"
-LABEL description="PostgreSQL container with Amazon, Hepsiburada, and Trendyol databases"
+LABEL description="PostgreSQL container with Amazon, Hepsiburada, and Trendyol databases combined"
