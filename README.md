@@ -429,13 +429,13 @@ This project implements a database system to analyze data from major Turkish e-c
 
    - When you're done, you can stop the container with:
      ```bash
-     docker stop ecommerce-db-container
+     docker stop <container_id>
      ```
 
 6. **Remove the Docker Container:**
    - If you need to remove the container, use:
      ```bash
-     docker rm ecommerce-db-container
+     docker rm <container_id>
      ```
 
 This setup will allow you to interact with your PostgreSQL database within a Docker container, providing a consistent and isolated environment for development and testing.
