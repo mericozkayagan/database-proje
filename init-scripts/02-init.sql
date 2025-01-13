@@ -104,7 +104,7 @@ CREATE TABLE products.product_variants (
     product_id UUID REFERENCES products.products(product_id),
     sku VARCHAR(100) UNIQUE NOT NULL,
     name VARCHAR(255) NOT NULL,
-    attributes JSONB NOT NULL,
+    type VARCHAR(255) NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -444,15 +444,24 @@ CREATE TABLE restaurant (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
 CREATE TABLE procurement (
     procurement_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     transaction_id UUID REFERENCES payments.transactions(transaction_id),
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     supplier_name VARCHAR(255),
-    total_amount DECIMAL(15,2) NOT NULL,
+    total_amount DECIMAL(15,2) NOT NULL
+);
+
+CREATE TABLE procurement_supermarket (
+    procurement_id UUID REFERENCES procurement(procurement_id),
     supermarket_id UUID REFERENCES supermarket(supermarket_id),
-    restaurant_id UUID REFERENCES restaurant(restaurant_id)
+    PRIMARY KEY (procurement_id, supermarket_id)
+);
+
+CREATE TABLE procurement_restaurant (
+    procurement_id UUID REFERENCES procurement(procurement_id),
+    restaurant_id UUID REFERENCES restaurant(restaurant_id),
+    PRIMARY KEY (procurement_id, restaurant_id)
 );
 
 CREATE TABLE market_shelf (

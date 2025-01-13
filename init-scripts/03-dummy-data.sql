@@ -37,9 +37,9 @@ INSERT INTO products.products (seller_id, category_id, brand_id, name, slug, des
 ((SELECT seller_id FROM marketplace.sellers OFFSET 1 LIMIT 1), (SELECT category_id FROM products.categories OFFSET 1 LIMIT 1), (SELECT brand_id FROM products.brands OFFSET 1 LIMIT 1), 'Washing Machine', 'washing-machine', 'High efficiency washing machine', 599.99, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert product variants
-INSERT INTO products.product_variants (product_id, sku, name, attributes) VALUES
-((SELECT product_id FROM products.products LIMIT 1), 'SKU123', 'Smartphone Variant', '{"color": "black", "size": "64GB"}'::jsonb),
-((SELECT product_id FROM products.products OFFSET 1 LIMIT 1), 'SKU456', 'Washing Machine Variant', '{"color": "white", "capacity": "7kg"}'::jsonb);
+INSERT INTO products.product_variants (product_id, sku, name, type) VALUES
+((SELECT product_id FROM products.products LIMIT 1), 'SKU123', 'Smartphone Variant', 'black'),
+((SELECT product_id FROM products.products OFFSET 1 LIMIT 1), 'SKU456', 'Washing Machine Variant', 'white');
 
 -- Insert inventory
 INSERT INTO products.inventory (product_id, variant_id, quantity, reserved_quantity, reorder_point) VALUES
@@ -96,20 +96,30 @@ INSERT INTO promotions.campaigns (name, description, start_date, end_date, disco
 ('Summer Sale', 'Discounts on summer products', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '1 month', 'percentage', 10.00, 50.00),
 ('Winter Sale', 'Discounts on winter products', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + interval '2 months', 'fixed_amount', 20.00, 100.00);
 
--- Insert supermarket
+-- Insert supermarkets
 INSERT INTO supermarket (name, phone, address, tracking_number, is_active) VALUES
 ('Supermarket A', '+905551234567', '123 Market St', 'TRACK123', TRUE),
 ('Supermarket B', '+905557654321', '456 Market St', 'TRACK456', TRUE);
 
--- Insert restaurant
+-- Insert restaurants
 INSERT INTO restaurant (name, address, phone, is_active) VALUES
 ('Restaurant A', '456 Food St', '+905557654321', TRUE),
 ('Restaurant B', '789 Food St', '+905559876543', TRUE);
 
 -- Insert procurement
-INSERT INTO procurement (transaction_id, order_date, supplier_name, total_amount, supermarket_id) VALUES
-((SELECT transaction_id FROM payments.transactions LIMIT 1), CURRENT_TIMESTAMP, 'Supplier A', 500.00, (SELECT supermarket_id FROM supermarket LIMIT 1)),
-((SELECT transaction_id FROM payments.transactions OFFSET 1 LIMIT 1), CURRENT_TIMESTAMP, 'Supplier B', 1000.00, (SELECT supermarket_id FROM supermarket OFFSET 1 LIMIT 1));
+INSERT INTO procurement (transaction_id, order_date, supplier_name, total_amount) VALUES
+((SELECT transaction_id FROM payments.transactions LIMIT 1), CURRENT_TIMESTAMP, 'Supplier A', 500.00),
+((SELECT transaction_id FROM payments.transactions OFFSET 1 LIMIT 1), CURRENT_TIMESTAMP, 'Supplier B', 1000.00);
+
+-- Link procurement to supermarkets
+INSERT INTO procurement_supermarket (procurement_id, supermarket_id) VALUES
+((SELECT procurement_id FROM procurement LIMIT 1), (SELECT supermarket_id FROM supermarket LIMIT 1)),
+((SELECT procurement_id FROM procurement OFFSET 1 LIMIT 1), (SELECT supermarket_id FROM supermarket OFFSET 1 LIMIT 1));
+
+-- Link procurement to restaurants
+INSERT INTO procurement_restaurant (procurement_id, restaurant_id) VALUES
+((SELECT procurement_id FROM procurement LIMIT 1), (SELECT restaurant_id FROM restaurant LIMIT 1)),
+((SELECT procurement_id FROM procurement OFFSET 1 LIMIT 1), (SELECT restaurant_id FROM restaurant OFFSET 1 LIMIT 1));
 
 -- Insert order items
 INSERT INTO orders.order_items (order_id, product_id, quantity, unit_price, total_price) VALUES

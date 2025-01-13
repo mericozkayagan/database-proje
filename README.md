@@ -372,21 +372,16 @@ This project implements a database system to analyze data from major Turkish e-c
    - **Key Features:**
      - Each procurement entry is uniquely identified by a `procurement_id`.
      - Includes `order_date`, `supplier_name`, and `total_amount`.
-     - References `supermarket_id` and `restaurant_id`.
 
-4. **Market Shelf Table (`market_shelf`)**
-   - **Purpose:** Manages information about market shelves.
+4. **Procurement-Supermarket Table (`procurement_supermarket`)**
+   - **Purpose:** Links procurement entries to supermarkets.
    - **Key Features:**
-     - Each shelf is uniquely identified by a `shelf_id`.
-     - Includes `name`, `slug`, `description`, and `price`.
-     - References `supermarket_id`.
+     - Composite primary key of `procurement_id` and `supermarket_id`.
 
-5. **Menu Table (`menu`)**
-   - **Purpose:** Stores information about restaurant menus.
+5. **Procurement-Restaurant Table (`procurement_restaurant`)**
+   - **Purpose:** Links procurement entries to restaurants.
    - **Key Features:**
-     - Each menu is uniquely identified by a `menu_id`.
-     - Includes `name`, `description`, and `price`.
-     - References `restaurant_id`.
+     - Composite primary key of `procurement_id` and `restaurant_id`.
 
 ## Getting Started
 
