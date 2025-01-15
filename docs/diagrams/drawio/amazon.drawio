@@ -2846,7 +2846,7 @@
             <mxPoint x="-1320" y="2007" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="fXx959JxWYzW82OAG_l6-71" value="FILM" style="whiteSpace=wrap;html=1;align=center;shadow=1;" vertex="1" parent="1">
+        <mxCell id="fXx959JxWYzW82OAG_l6-71" value="movie" style="whiteSpace=wrap;html=1;align=center;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="-1300" y="2042" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="fXx959JxWYzW82OAG_l6-72" value="d" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
@@ -2870,7 +2870,7 @@
             <mxPoint x="-1039" y="2279.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="g-zTzgUS4uHoFK4Dc0Hd-79" value="Film_id" style="ellipse;whiteSpace=wrap;html=1;align=center;fontStyle=4;shadow=1;" vertex="1" parent="1">
+        <mxCell id="g-zTzgUS4uHoFK4Dc0Hd-79" value="movie_id" style="ellipse;whiteSpace=wrap;html=1;align=center;fontStyle=4;shadow=1;" vertex="1" parent="1">
           <mxGeometry x="-1360" y="2136" width="98.25" height="20" as="geometry" />
         </mxCell>
         <mxCell id="u_TR4m5mXYmLBz_CJBQ_-81" value="&lt;span style=&quot;border-bottom: 1px dotted&quot;&gt;History_id&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">

@@ -33,6 +33,7 @@ CREATE TABLE products.addresses (
     address_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     address_line1 VARCHAR(255) NOT NULL,
     address_line2 VARCHAR(255),
+    address_title VARCHAR(255),
     city VARCHAR(100) NOT NULL,
     state VARCHAR(100),
     postal_code VARCHAR(20),
@@ -371,8 +372,8 @@ CREATE TABLE video.series (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE video.film (
-    film_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+CREATE TABLE video.movie (
+    movie_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     content_id UUID UNIQUE REFERENCES video.content(content_id),
     duration_minutes INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

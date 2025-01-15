@@ -7,9 +7,9 @@ INSERT INTO users.users (email, password_hash, password_salt, first_name, last_n
 ('ali.yilmaz@email.com', 'hash3', 'salt3', 'Ali', 'Yılmaz', '+905559876543');
 
 -- Insert addresses
-INSERT INTO products.addresses (address_line1, address_line2, city, state, postal_code, country_code) VALUES
-('123 Main St', 'Apt 1', 'Istanbul', 'Istanbul', '34000', 'TR'),
-('456 Elm St', NULL, 'Ankara', 'Ankara', '06000', 'TR');
+INSERT INTO products.addresses (address_line1, address_line2, address_title, city, state, postal_code, country_code) VALUES
+('123 Main St', 'Apt 1', 'Home', 'Istanbul', 'Istanbul', '34000', 'TR'),
+('456 Elm St', NULL, 'Work', 'Ankara', 'Ankara', '06000', 'TR');
 
 -- Insert warehouses
 INSERT INTO products.warehouses (name, code, address_id, is_active) VALUES

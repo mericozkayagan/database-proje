@@ -27,6 +27,7 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Users Schema
 
 1. **Users Table (`users.users`)**
+
    - **Purpose:** Stores core information for each user registered on the platform.
    - **Key Features:**
      - Each user is uniquely identified by a `user_id`.
@@ -38,6 +39,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - Soft deletion is supported with `is_deleted` and `deleted_at`.
 
 2. **Contact Information Table (`users.contact_info`)**
+
    - **Purpose:** Manages additional contact methods for users.
    - **Key Features:**
      - Each contact entry is uniquely identified by a `contact_id`.
@@ -47,6 +49,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - The `is_primary` field indicates if this is the primary contact method.
 
 3. **Saved Carts Table (`users.cart`)**
+
    - **Purpose:** Allows users to save their shopping carts for future purchases.
    - **Key Features:**
      - Each saved cart is uniquely identified by a `cart_id`.
@@ -55,6 +58,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - Timestamps (`created_at`, `updated_at`) track when the cart was created and modified.
 
 4. **User Roles Table (`users.user_roles`)**
+
    - **Purpose:** Assigns roles to users, defining their permissions and access levels.
    - **Key Features:**
      - Each role assignment is uniquely identified by a `role_id`.
@@ -63,6 +67,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - The `created_at` timestamp records when the role was assigned.
 
 5. **Addresses Table (`users.addresses`)**
+
    - **Purpose:** Stores multiple addresses for users, such as billing and shipping addresses.
    - **Key Features:**
      - Each address is uniquely identified by an `address_id`.
@@ -72,6 +77,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - The `is_default` field indicates if this is the default address for transactions.
 
 6. **Preferences Table (`users.preferences`)**
+
    - **Purpose:** Stores user preferences for language, currency, and notification settings.
    - **Key Features:**
      - Each preference set is uniquely identified by a `preference_id`.
@@ -80,6 +86,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - `notification_settings` and `privacy_settings` are JSON objects storing user-specific settings.
 
 7. **User Security Table (`users.user_security`)**
+
    - **Purpose:** Manages security settings for users, including two-factor authentication.
    - **Key Features:**
      - Each security setting is uniquely identified by a `security_id`.
@@ -88,6 +95,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - `security_questions` is a JSON array storing security questions and answers.
 
 8. **Languages Table (`users.languages`)**
+
    - **Purpose:** Defines the languages supported by the platform.
    - **Key Features:**
      - Each language is uniquely identified by a `language_code`.
@@ -106,12 +114,14 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Products Schema
 
 1. **Addresses Table (`products.addresses`)**
+
    - **Purpose:** Stores addresses related to products.
    - **Key Features:**
      - Each address is uniquely identified by an `address_id`.
      - Includes fields like `address_line1`, `city`, `postal_code`, and `country_code`.
 
 2. **Warehouses Table (`products.warehouses`)**
+
    - **Purpose:** Manages warehouse information.
    - **Key Features:**
      - Each warehouse is uniquely identified by a `warehouse_id`.
@@ -119,6 +129,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - The `is_active` field indicates if the warehouse is operational.
 
 3. **Categories Table (`products.categories`)**
+
    - **Purpose:** Organizes products into categories.
    - **Key Features:**
      - Each category is uniquely identified by a `category_id`.
@@ -126,6 +137,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - The `is_active` field indicates if the category is available.
 
 4. **Brands Table (`products.brands`)**
+
    - **Purpose:** Stores brand information.
    - **Key Features:**
      - Each brand is uniquely identified by a `brand_id`.
@@ -133,6 +145,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - The `is_active` field indicates if the brand is active.
 
 5. **Products Table (`products.products`)**
+
    - **Purpose:** Stores core product information.
    - **Key Features:**
      - Each product is uniquely identified by a `product_id`.
@@ -140,6 +153,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - References `seller_id`, `category_id`, and `brand_id`.
 
 6. **Product Variants Table (`products.product_variants`)**
+
    - **Purpose:** Manages product variants.
    - **Key Features:**
      - Each variant is uniquely identified by a `variant_id`.
@@ -147,6 +161,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - The `is_active` field indicates if the variant is available.
 
 7. **Inventory Table (`products.inventory`)**
+
    - **Purpose:** Tracks inventory levels.
    - **Key Features:**
      - Each inventory entry is uniquely identified by an `inventory_id`.
@@ -154,17 +169,20 @@ This project implements a database system to analyze data from major Turkish e-c
      - References `product_id` and `variant_id`.
 
 8. **Inventory Warehouse Table (`products.inventory_warehouse`)**
+
    - **Purpose:** Links inventory to warehouses.
    - **Key Features:**
      - Composite primary key of `inventory_id` and `warehouse_id`.
 
 9. **Product Specifications Table (`products.product_specifications`)**
+
    - **Purpose:** Stores product specifications.
    - **Key Features:**
      - Each specification is uniquely identified by a `specification_id`.
      - Includes `key` and `value`.
 
 10. **Product Images Table (`products.product_images`)**
+
     - **Purpose:** Manages product images.
     - **Key Features:**
       - Each image is uniquely identified by an `image_id`.
@@ -172,6 +190,7 @@ This project implements a database system to analyze data from major Turkish e-c
       - The `is_primary` field indicates if the image is the primary one.
 
 11. **Warehouse Addresses Table (`products.warehouse_addresses`)**
+
     - **Purpose:** Links warehouses to addresses.
     - **Key Features:**
       - Composite primary key of `warehouse_id` and `address_id`.
@@ -186,6 +205,7 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Orders Schema
 
 1. **Orders Table (`orders.orders`)**
+
    - **Purpose:** Manages order information.
    - **Key Features:**
      - Each order is uniquely identified by an `order_id`.
@@ -193,6 +213,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - References `user_id`.
 
 2. **Order Items Table (`orders.order_items`)**
+
    - **Purpose:** Stores items within an order.
    - **Key Features:**
      - Each order item is uniquely identified by an `order_item_id`.
@@ -209,6 +230,7 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Payments Schema
 
 1. **Payment Methods Table (`payments.payment_methods`)**
+
    - **Purpose:** Manages payment methods.
    - **Key Features:**
      - Each payment method is uniquely identified by a `payment_method_id`.
@@ -216,6 +238,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - The `is_default` field indicates if this is the default payment method.
 
 2. **Installment Plans Table (`payments.installment_plans`)**
+
    - **Purpose:** Stores installment plan details.
    - **Key Features:**
      - Each plan is uniquely identified by a `plan_id`.
@@ -223,6 +246,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - References `payment_method_id`.
 
 3. **Transactions Table (`payments.transactions`)**
+
    - **Purpose:** Tracks payment transactions.
    - **Key Features:**
      - Each transaction is uniquely identified by a `transaction_id`.
@@ -238,6 +262,7 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Shipping Schema
 
 1. **Carriers Table (`shipping.carriers`)**
+
    - **Purpose:** Stores carrier information.
    - **Key Features:**
      - Each carrier is uniquely identified by a `carrier_id`.
@@ -245,6 +270,7 @@ This project implements a database system to analyze data from major Turkish e-c
      - The `is_active` field indicates if the carrier is operational.
 
 2. **Shipping Methods Table (`shipping.shipping_methods`)**
+
    - **Purpose:** Manages shipping methods.
    - **Key Features:**
      - Each method is uniquely identified by a `method_id`.
@@ -270,12 +296,14 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Promotions Schema
 
 1. **Campaigns Table (`promotions.campaigns`)**
+
    - **Purpose:** Manages promotional campaigns.
    - **Key Features:**
      - Each campaign is uniquely identified by a `campaign_id`.
      - Includes `name`, `description`, and `discount_type`.
 
 2. **Campaign Products Table (`promotions.campaign_products`)**
+
    - **Purpose:** Links products to campaigns.
    - **Key Features:**
      - Composite primary key of `campaign_id` and `product_id`.
@@ -292,6 +320,7 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Prime Schema
 
 1. **Memberships Table (`prime.memberships`)**
+
    - **Purpose:** Manages prime memberships for users.
    - **Key Features:**
      - Each membership is uniquely identified by a `membership_id`.
@@ -308,22 +337,25 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Video Schema
 
 1. **Content Table (`video.content`)**
+
    - **Purpose:** Stores information about video content available on the platform.
    - **Key Features:**
      - Each content entry is uniquely identified by a `content_id`.
      - Includes `title`, `description`, `type`, and `release_year`.
 
 2. **Series Table (`video.series`)**
+
    - **Purpose:** Manages series episodes available on the platform.
    - **Key Features:**
      - Each series entry is uniquely identified by a `episode_id`.
      - Includes `season_number` and `episode_number`.
      - References `content_id`.
 
-3. **Film Table (`video.film`)**
-   - **Purpose:** Stores information about films available on the platform.
+3. **Movie Table (`video.movie`)**
+
+   - **Purpose:** Stores information about movies available on the platform.
    - **Key Features:**
-     - Each film entry is uniquely identified by a `film_id`.
+     - Each movie entry is uniquely identified by a `movie_id`.
      - Includes `duration_minutes`.
      - References `content_id`.
 
@@ -339,6 +371,7 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Premium Schema
 
 1. **Memberships Table (`premium.memberships`)**
+
    - **Purpose:** Manages premium memberships for users.
    - **Key Features:**
      - Each membership is uniquely identified by a `membership_id`.
@@ -356,24 +389,28 @@ This project implements a database system to analyze data from major Turkish e-c
 #### Food and Restaurant Services
 
 1. **Supermarket Table (`supermarket`)**
+
    - **Purpose:** Manages information about supermarkets.
    - **Key Features:**
      - Each supermarket is uniquely identified by a `supermarket_id`.
      - Includes `name`, `phone`, and `address`.
 
 2. **Restaurant Table (`restaurant`)**
+
    - **Purpose:** Stores information about restaurants.
    - **Key Features:**
      - Each restaurant is uniquely identified by a `restaurant_id`.
      - Includes `name`, `address`, and `phone`.
 
 3. **Procurement Table (`procurement`)**
+
    - **Purpose:** Tracks procurement transactions related to food services.
    - **Key Features:**
      - Each procurement entry is uniquely identified by a `procurement_id`.
      - Includes `order_date`, `supplier_name`, and `total_amount`.
 
 4. **Procurement-Supermarket Table (`procurement_supermarket`)**
+
    - **Purpose:** Links procurement entries to supermarkets.
    - **Key Features:**
      - Composite primary key of `procurement_id` and `supermarket_id`.
